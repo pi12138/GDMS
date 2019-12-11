@@ -9,6 +9,7 @@ class Account(models.Model):
     """
     username = models.CharField(verbose_name="账号名", max_length=30, unique=True)
     password = models.CharField(max_length=30, verbose_name="密码")
+    email = models.CharField(max_length=30, verbose_name="邮箱")
     is_active = models.BooleanField(default=False, verbose_name="是否激活")
 
 
@@ -27,7 +28,6 @@ class Student(models.Model):
     profession = models.ForeignKey(to=Profession, on_delete=models.CASCADE, verbose_name="专业")
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
     phone = models.CharField(max_length=30, verbose_name="联系方式")
-    email = models.CharField(max_length=30, verbose_name="邮箱")
     qq = models.CharField(max_length=30, verbose_name="QQ")
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     is_monitor = models.BooleanField(default=False, verbose_name="是否是班长")
@@ -60,12 +60,11 @@ class Teacher(models.Model):
     teacher_title = models.IntegerField(choices=TEACHER_TITLE, verbose_name="职称", default=1)
     phone = models.CharField(max_length=30, verbose_name="联系方式")
     qq = models.CharField(max_length=30, verbose_name="QQ")
-    email = models.CharField(max_length=30, verbose_name="邮箱")
     office = models.ForeignKey(to=Office, on_delete=models.CASCADE, verbose_name="教研室")
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     is_monitor = models.BooleanField(default=False, verbose_name="是否是教研室负责人")
-    
+
 
 class Administrator(models.Model):
     """
@@ -73,4 +72,3 @@ class Administrator(models.Model):
     """
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
-
