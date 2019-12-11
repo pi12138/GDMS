@@ -1,5 +1,4 @@
 from django.db import models
-from user.models import Student, Teacher
 # Create your models here.
 
 
@@ -34,8 +33,6 @@ class Klass(models.Model):
     """
     name = models.CharField(max_length=30, verbose_name="班级名称", unique=True)
     number = models.CharField(max_length=30, verbose_name="班级编号", unique=True)
-    # monitor = models.CharField(max_length=30, verbose_name="班长")
-    monitor = models.ForeignKey(to=Student, on_delete=models.CASCADE)
 
 
 class Office(models.Model):
@@ -44,5 +41,3 @@ class Office(models.Model):
     """
     name = models.CharField(max_length=30, verbose_name="教研室名称", unique=True)
     number = models.CharField(max_length=30, verbose_name="教研室编号", unique=True)
-    # monitor = models.CharField(max_length=30, verbose_name="教研室负责人")
-    monitor = models.ForeignKey(to=Teacher, on_delete=models.CASCADE)

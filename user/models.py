@@ -30,6 +30,7 @@ class Student(models.Model):
     email = models.CharField(max_length=30, verbose_name="邮箱")
     qq = models.CharField(max_length=30, verbose_name="QQ")
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
+    is_monitor = models.BooleanField(default=False, verbose_name="是否是班长")
 
 
 class Teacher(models.Model):
@@ -63,7 +64,8 @@ class Teacher(models.Model):
     office = models.ForeignKey(to=Office, on_delete=models.CASCADE, verbose_name="教研室")
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
-
+    is_monitor = models.BooleanField(default=False, verbose_name="是否是教研室负责人")
+    
 
 class Administrator(models.Model):
     """
