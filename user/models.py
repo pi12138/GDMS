@@ -1,16 +1,17 @@
 from django.db import models
+from django.contrib.auth.models import User
 from organization.models import Faculty, Profession, Direction, Klass, Office
 # Create your models here.
 
 
-class Account(models.Model):
-    """
-    账号模型
-    """
-    username = models.CharField(verbose_name="账号名", max_length=30, unique=True)
-    password = models.CharField(max_length=30, verbose_name="密码")
-    email = models.CharField(max_length=30, verbose_name="邮箱")
-    is_active = models.BooleanField(default=False, verbose_name="是否激活")
+# class Account(models.Model):
+#     """
+#     账号模型
+#     """
+#     username = models.CharField(verbose_name="账号名", max_length=30, unique=True)
+#     password = models.CharField(max_length=30, verbose_name="密码")
+#     email = models.CharField(max_length=30, verbose_name="邮箱")
+#     is_active = models.BooleanField(default=False, verbose_name="是否激活")
 
 
 class Student(models.Model):
@@ -29,8 +30,9 @@ class Student(models.Model):
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
     phone = models.CharField(max_length=30, verbose_name="联系方式")
     qq = models.CharField(max_length=30, verbose_name="QQ")
-    account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
+    # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     is_monitor = models.BooleanField(default=False, verbose_name="是否是班长")
+    account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
 
 
 class Teacher(models.Model):
@@ -62,8 +64,9 @@ class Teacher(models.Model):
     qq = models.CharField(max_length=30, verbose_name="QQ")
     office = models.ForeignKey(to=Office, on_delete=models.CASCADE, verbose_name="教研室")
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
-    account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
+    # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     is_monitor = models.BooleanField(default=False, verbose_name="是否是教研室负责人")
+    account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
 
 
 class Administrator(models.Model):
@@ -71,4 +74,5 @@ class Administrator(models.Model):
     管理员模型
     """
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
-    account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
+    # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
+    account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
