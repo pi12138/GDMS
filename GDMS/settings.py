@@ -133,16 +133,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # drf
-# REST_FRAMEWORK = {
-#     # 异常处理
-#     'EXCEPTION_HANDLER': 'luffy.utils.exceptions.custom_exception_handler',
-#     # 用户登陆认证方式
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication',
-#     ),
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
 
 
 # cors
