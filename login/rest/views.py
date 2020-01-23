@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from user.helpers import get_role
 
 
 class TestViewSet(ViewSet):
@@ -7,7 +8,6 @@ class TestViewSet(ViewSet):
 
     """
     def list(self, request):
-        print(request.user)
-        if hasattr(request.user, "teacher"):
-            print("Teacher")
-        return Response({"status": "OK"})
+        role = get_role(request.user)
+
+        return Response({"role": role})

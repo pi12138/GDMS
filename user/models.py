@@ -84,4 +84,4 @@ class Administrator(models.Model):
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
 
     def __str__(self):
-        return self.name
+        return self.account.username

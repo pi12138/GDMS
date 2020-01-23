@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'^login/', obtain_jwt_token),
 
     path('import_data/', include(('import_data.urls', 'import_data'), namespace='import_data')),
+
+    path('api/login/', include(('login.rest.urls', 'login'), namespace='api-login')),
 ]
