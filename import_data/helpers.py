@@ -7,7 +7,11 @@ def handle_excel_info(filename):
 
     data_list = list()
     for i in range(0, table.nrows):
-        values = [str(j).replace(' ', '') for j in table.row_values(i)]
+        values = [handle_data(j) for j in table.row_values(i)]
         data_list.append(values)
 
     return data_list
+
+
+def handle_data(data):
+    return str(data).replace(' ', '').split('.')[0]

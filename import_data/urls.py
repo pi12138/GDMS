@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from .views import ImportFaculty
+from .views import ImportData
 
 urlpatterns = [
-    url('^faculty/$', ImportFaculty.as_view(), name='faculty'),
+    url('', ImportData.as_view(), name='data'),
 ]

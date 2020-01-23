@@ -34,6 +34,9 @@ class Student(models.Model):
     is_monitor = models.BooleanField(default=False, verbose_name="是否是班长")
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
 
+    def __str__(self):
+        return self.name
+
 
 class Teacher(models.Model):
     """
@@ -68,6 +71,9 @@ class Teacher(models.Model):
     is_monitor = models.BooleanField(default=False, verbose_name="是否是教研室负责人")
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
 
+    def __str__(self):
+        return self.name
+
 
 class Administrator(models.Model):
     """
@@ -76,3 +82,6 @@ class Administrator(models.Model):
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
     # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
+
+    def __str__(self):
+        return self.name

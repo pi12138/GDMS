@@ -1,37 +1,77 @@
 from django.shortcuts import render
 from django.views.generic import View
-from django.contrib.auth.models import User
-from django.shortcuts import HttpResponse
 
 from .helpers import handle_excel_info
-from organization.models import Faculty
+from organization.models import Faculty, Profession, Direction, Klass, Office
 # Create your views here.
 
 
-class ImportFaculty(View):
+class ImportData(View):
     """
-    导入学院信息
+    导入信息
     """
     def get(self, request):
-        return render(request, 'import_faculty.html')
+        return render(request, 'import_data.html')
 
     def post(self, request):
-        faculty_info = request.FILES.get('faculty_info', None)
+        file = request.FILES.get('file', None)
+        type = request.POST.get('type', 0)
+        type = int(type)
+        info = '导入成功'
 
-        if not faculty_info:
+        if not file:
             info = "请传入文件"
 
+        type_dict = {
+            0: self.faculty_info,
+            1: self.profession_info,
+            2: self.direction_info,
+            3: self.klass_info,
+            4: self.office_info,
+        }
         try:
-            data_list = handle_excel_info(faculty_info.read())
+            file_data = file.read()
+            data_list = handle_excel_info(file_data)
             for data in data_list:
-                Faculty.objects.create(name=data[0], number=data[1], monitor=data[2])
+                type_dict[type](data)
+
         except Exception as e:
             info = "文件内容存在异常"
             print('error info: {}'.format(e))
 
-        info = '导入成功'
         context = {
-            'info': info
+            'info': info,
+            'type': type
         }
 
-        return render(request, 'import_faculty.html', context)
+        return render(request, 'import_data.html', context)
+
+    @staticmethod
+    def faculty_info(data):
+        Faculty.objects.create(name=data[0], number=data[1], monitor=data[2])
+
+    @staticmethod
+    def profession_info(data):
+        Profession.objects.create(name=data[0], number=data[1],
+                                  faculty=Faculty.objects.get(number=data[2])
+                                  )
+
+    @staticmethod
+    def direction_info(data):
+        Direction.objects.create(name=data[0], number=data[1],
+                                 profession=Profession.objects.get(number=data[2])
+                                 )
+
+    @staticmethod
+    def klass_info(data):
+        Klass.objects.create(name=data[0], number=data[1],
+                             direction=Direction.objects.get(number=data[2])
+                             )
+
+    @staticmethod
+    def office_info(data):
+        Office.objects.create(name=data[0], number=data[1],
+                              faculty=Faculty.objects.get(number=data[2])
+                              )
+
+

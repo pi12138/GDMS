@@ -10,6 +10,9 @@ class Faculty(models.Model):
     number = models.CharField(max_length=30, verbose_name="学院编号", unique=True)
     monitor = models.CharField(max_length=30, verbose_name="院长")
 
+    def __str__(self):
+        return self.name
+
 
 class Profession(models.Model):
     """
@@ -19,6 +22,9 @@ class Profession(models.Model):
     number = models.CharField(max_length=30, verbose_name="专业编号", unique=True)
     faculty = models.ForeignKey(to='Faculty', verbose_name="所属学院", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Direction(models.Model):
     """
@@ -27,6 +33,9 @@ class Direction(models.Model):
     name = models.CharField(max_length=30, verbose_name="方向名称", unique=True)
     number = models.CharField(max_length=30, verbose_name="方向编号", unique=True)
     profession = models.ForeignKey(to='Profession', verbose_name="所属专业", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Klass(models.Model):
@@ -38,6 +47,9 @@ class Klass(models.Model):
     # faculty = models.ForeignKey(to='Faculty', verbose_name="所属学院", on_delete=models.CASCADE)
     direction = models.ForeignKey(to='Direction', verbose_name="所学方向", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Office(models.Model):
     """
@@ -46,3 +58,6 @@ class Office(models.Model):
     name = models.CharField(max_length=30, verbose_name="教研室名称", unique=True)
     number = models.CharField(max_length=30, verbose_name="教研室编号", unique=True)
     faculty = models.ForeignKey(to='Faculty', verbose_name="所属学院", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
