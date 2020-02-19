@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'user',
+    # 'user.templatetags',
     'organization',
     'login',
     'import_data',
