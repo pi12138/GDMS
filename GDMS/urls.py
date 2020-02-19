@@ -22,6 +22,8 @@ from django.conf.urls import url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('login.urls', 'login'), namespace='login')),
+    path("user/", include(('user.urls', 'user'), namespace="user")),
+    path("organization/", include(("organization.urls", "organization"), namespace="organization")),
     # url(r'^login/', obtain_jwt_token),
 
     path('import_data/', include(('import_data.urls', 'import_data'), namespace='import_data')),
