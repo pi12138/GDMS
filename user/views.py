@@ -1,9 +1,15 @@
 from django.shortcuts import render
 from django.views.generic import View
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from user.helpers import get_role
 from user.mixins import LoginRequiredMixin
 from organization.models import Faculty
+
+import json
+
 
 class StudentUserSettingsView(LoginRequiredMixin, View):
     """
@@ -13,15 +19,41 @@ class StudentUserSettingsView(LoginRequiredMixin, View):
         role_str, role_obj = get_role(request.user)
         
         student = self.get_student_info(request.user, role_obj)
-        facultys = self.get_faculty_list()
         context = {
             "student": student,
-            'facultys': facultys
         }
         return render(request, 'student_settings.html', context)
 
     def post(self, request):
-        pass
+        info = self.get_info(request.POST)
+    
+        if not all(info):
+            context = {
+                "error_msg": "信息不全，请填写完毕再次提交！",
+                "student": self.get_student_info(request.user, request.user.student)
+            }
+            return render(request, 'student_settings.html', context)
+
+        user = User.objects.get(username=info[0])
+        role_obj = user.student
+        user.email = info[5]
+        role_obj.name = info[1]
+        role_obj.phone = info[2]
+        role_obj.gender = int(info[3])
+        role_obj.qq = info[4]
+        role_obj.faculty_id = info[6]
+        role_obj.profession_id = info[7]
+        role_obj.diretcion_id = info[8]
+        role_obj.klass_id = info[9]
+        user.save()
+        role_obj.save()
+
+        context = {
+            "student": self.get_student_info(user, role_obj)
+        }
+
+        return render(request, 'student_settings.html', context)
+        
 
     def get_student_info(self, user, role):
         """
@@ -36,16 +68,52 @@ class StudentUserSettingsView(LoginRequiredMixin, View):
         student['gender'] = role.gender
         student['qq'] = role.qq
         student['email'] = user.email
-        student['faculty'] = role.faculty
-        student['profession'] = role.profession
-        student['direction'] = role.diretcion
-        student['klass'] = role.klass
+        student['faculty'] = role.faculty.id if role.faculty else 0
+        student['profession'] = role.profession.id if role.profession else 0
+        student['direction'] = role.diretcion.id if role.diretcion else 0
+        student['klass'] = role.klass.id if role.klass else 0
 
+        # print(student)
         return student
 
-    def get_faculty_list(self):
-        """
-        获取学院列表对象
-        """
-        faculty_list = Faculty.objects.all()
-        return faculty_list
+    def get_info(self, post):
+        username = post.get('username')
+        name = post.get('name')
+        phone = post.get('phone')
+        gender = post.get('gender')
+        qq = post.get('qq')
+        email = post.get('email')
+        faculty = int(post.get('faculty'))
+        profession = int(post.get('profession'))
+        direction = int(post.get('direction'))
+        klass = int(post.get('klass'))
+
+        info = [username, name, phone, gender, qq, email, faculty, profession, direction, klass]
+        print(info)
+
+        return info
+
+
+@csrf_exempt
+def change_password(request):
+    body = request.body.decode()
+    post = json.loads(body)
+
+    old_password = post.get('old_password')
+    new_password1 = post.get('new_password1')
+    new_password2 = post.get("new_password2")
+    user = request.user
+
+    if not user.check_password(old_password):
+        return JsonResponse("密码错误！", status=400, safe=False)
+
+    if old_password == new_password1:
+        return JsonResponse("新旧密码一样！", status=400, safe=False)
+
+    if new_password1 != new_password2:
+        return JsonResponse("新密码不一致", status=400, safe=False)
+
+    user.set_password(new_password1)
+    user.save()
+
+    return JsonResponse("修改密码成功！", status=200, safe=False)
