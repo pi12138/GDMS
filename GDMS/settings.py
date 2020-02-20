@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'organization',
     'login',
     'import_data',
+    'subject',
 ]
 
 MIDDLEWARE = [
