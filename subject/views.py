@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 # Create your views here.
 from user.mixins import LoginRequiredMixin
 from .models import Subject
-from .serializers import SubjectSerializer
+from subject.rest.serializers import SubjectSerializer
 
 import json
 import datetime
@@ -114,3 +114,14 @@ class AlterSubject(LoginRequiredMixin, View):
         ser.save()
         return JsonResponse({'msg': "修改成功", 'data': ser.validated_data}, safe=False, status=200)
 
+
+class ApprovalSubject(LoginRequiredMixin, View):
+    """
+    审核课题
+    """
+
+    def get(self, request):
+        return render(request, 'approval_subject.html')
+
+    def post(self, request):
+        pass

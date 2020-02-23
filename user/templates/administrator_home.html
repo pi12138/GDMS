@@ -1,17 +1,18 @@
+{% load extra_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理员 | 毕业设计管理系统</title>
+    <title>教师 | 毕业设计管理系统</title>
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 
 <body>
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -23,11 +24,22 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">主页</a></li>
-                    <li><a href="#">页面 2</a></li>
-                    <li><a href="#">页面 3</a></li>
+                    <li class="active"><a href="#">我的任务</a></li>
+                    <li><a href="/subject/approval_subject/">审批课题</a></li>
+                    <li><a href="#">毕业设计过程</a></li>
+                    <li><a href="#">公告</a></li>
+                    <li><a href="#">下载中心</a></li>
+                    <li><a href="/user/administrator_settings/">个人设置</a></li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/logout/">退出</a></li>
+                </ul>
+                <div class="navbar-right">
+
+                    <p class="navbar-text">{{ user|get_username }}</p>
+                </div>
             </div>
+
         </div>
     </nav>
 </body>

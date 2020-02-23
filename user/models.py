@@ -82,6 +82,7 @@ class Administrator(models.Model):
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院", blank=True, null=True)
     # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
+    name = models.CharField(verbose_name="姓名", max_length=30, default="", blank=True, null=True)
 
     def __str__(self):
-        return self.account.username
+        return self.name
