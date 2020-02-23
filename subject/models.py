@@ -26,7 +26,7 @@ class Subject(models.Model):
     declare_time = models.DateTimeField(verbose_name="申报时间", auto_now=True,)
     reviewer = models.ForeignKey(Administrator, on_delete=models.CASCADE, verbose_name="审核人", blank=True, null=True)
     review_result = models.IntegerField(choices=REVIEW_RESULT_VALUE, default=0, verbose_name="审核结果", blank=True, null=True)
-    review_time = models.DateTimeField(verbose_name="审核时间", auto_now=True, blank=True, null=True)
+    review_time = models.DateTimeField(verbose_name="审核时间", blank=True, null=True)
 
     def __str__(self):
         return self.subject_name

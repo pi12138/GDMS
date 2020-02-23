@@ -209,8 +209,13 @@
     </div>
 
     <!-- 遮罩层 -->
-    <div class="container hidden" id="mark_form">
+    <div class="container hidden" id="mark_form" ref="mark_form">
         <div class="form" role="form">
+                <div class="row">
+                    <h3 class="text-center">查看或修改申报表</h3>
+                    <hr>
+                </div>
+                </div>
                 <div class="row">
                 <div class="form-group col-md-12">
                     <label for="subject_name" class="">课题名称</label>
@@ -279,8 +284,11 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-2">
-                        <button class="form-control btn btn-primary" >提交申报课题表</button>
+                    <div class="form-group col-md-3">
+                        <button class="form-control btn btn-primary" @click="alterSubject" title="提交当前修改的申报表" ref="submitBtn">提交当前修改</button>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <button class="form-control btn btn-default" @click="setMarkFormHidden" title="关闭当前申报表">关闭当前</button>
                     </div>
                 </div>
             </div>

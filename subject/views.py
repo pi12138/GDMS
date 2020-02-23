@@ -96,4 +96,21 @@ class AlterSubject(LoginRequiredMixin, View):
         return JsonResponse(ser.data, status=200)
 
     def post(self, request):
-        pass
+        body = request.body.decode()
+        data = json.loads(body)
+        subject_id = data.get('subject_id')
+        data['declare_time'] = datetime.datetime.now()
+
+        query_set = Subject.objects.filter(id=subject_id)
+        if not query_set.exists():
+            return JsonResponse({'msg': "该课题不存在"}, safe=False, status=400)
+
+        subject = query_set[0]
+        ser = SubjectSerializer(instance=subject, data=data)
+
+        if not ser.is_valid():
+            return JsonResponse({'msg': "修改失败", 'data': ser.errors}, safe=False, status=400)
+
+        ser.save()
+        return JsonResponse({'msg': "修改成功", 'data': ser.validated_data}, safe=False, status=200)
+

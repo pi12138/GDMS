@@ -94,6 +94,7 @@ var subjectList = new Vue({
     data: {},
     methods: {
         showSubjectInfo(subjectId){
+            /* 获取指定课题的数据 */
             // console.log(subjectId)
             var url = "http://127.0.0.1:8000/subject/alter_subject/" + "?subject_id=" + subjectId
 
@@ -105,16 +106,19 @@ var subjectList = new Vue({
                     }
 
                     var data = res.data
-                    mark_form.subjectName = data.subject_name
-                    mark_form.teacher = ""
+                    mark_form.setMarkFormData(data)
+                    mark_form.setMarkFormShow()
 
                 })
                 .catch(function (error) {
+                    console.log(error)
                     console.log(error.response)
+                    alert(error.response.data.msg)
                 })
-        }
+        },
     }
 })
+
 
 var mark_form = new Vue({
     el: "#mark_form",
@@ -128,6 +132,85 @@ var mark_form = new Vue({
         expectGoal: "",
         require: "",
         requiredConditions: "",
-        references:""
+        references:"",
+        review_result: "",
+
+        teacher_id: "",
+        student_id: "",
+        subject_id: ""
+    },
+    methods: {
+        setMarkFormData(data){
+            /* 给mark_form 的data实例赋值 */
+            this.subjectName = data.subject_name
+            this.teacher = data.teacher_name
+            this.office = data.office_name
+            this.number = data.number_of_people
+            this.student = data.student_name
+            this.subjectDesc = data.subject_description
+            this.expectGoal = data.expected_goal
+            this.require = data.require
+            this.requiredConditions = data.required_conditions
+            this.references = data.references
+            this.review_result = data.review_result
+
+            this.teacher_id = data.questioner
+            this.student_id = data.select_student
+            this.subject_id = data.id
+
+        },
+
+        setMarkFormShow(){
+            /* 显示mark_form 实例 */
+            this.$refs.mark_form.classList.remove('hidden')
+
+            if (this.review_result === "审核通过"){
+                this.$refs.submitBtn.classList.add('disabled')
+            }
+        },
+
+        setMarkFormHidden(){
+            /* 隐藏mark_form实例 */
+            this.$refs.mark_form.classList.add('hidden')
+            location.reload()
+
+            return
+        },
+
+        alterSubject(){
+            /* 提交修改课题表单 */
+            var url = "http://127.0.0.1:8000/subject/alter_subject/"
+            var data = {
+                subject_name: this.subjectName,
+                number_of_people: this.number,
+                subject_description: this.subjectDesc,
+                expected_goal: this.expectGoal,
+                require: this.require,
+                required_conditions: this.requiredConditions,
+                references: this.references,
+                subject_id: this.subject_id
+            }
+            axios.post(url, data)
+                .then(function (res) {
+                    if (res.status !== 200){
+                        console.log(res)
+                    }
+                    const data = res.data.data
+                    mark_form.subjectName = data.subject_name
+                    mark_form.number = data.number_of_people
+                    mark_form.subjectDesc = data.subject_description
+                    mark_form.expectGoal = data.expected_goal
+                    mark_form.require = data.require
+                    mark_form.requiredConditions = data.required_conditions
+                    mark_form.references = data.references
+
+                    alert("修改成功")
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    console.log(error.response)
+                    alert('修改失败，发生错误')
+                })
+        }
     }
 })
