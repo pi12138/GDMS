@@ -30,6 +30,5 @@ class SubjectSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'questioner': {'read_only': True},
             'declare_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
-            'review_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
             'select_student': {'read_only': True}
         }

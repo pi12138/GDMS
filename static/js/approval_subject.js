@@ -65,7 +65,43 @@ const markForm = new Vue({
             console.log(formData)
             this.formData = formData
             this.$refs.markForm.classList.remove('hidden')
+        },
+
+        submitForm(subjectId){
+            const url = "http://127.0.0.1:8000/api/subject/pending_subject/" + subjectId + '/'
+            const csrfToken = getCookie('csrftoken')
+            const headers = {
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            }
+            axios.patch(url, this.formData, headers)
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(error => {
+                    console.log(error)
+                    console.log(error.response)
+                    alert('Error')
+                })
+        },
+
+        closeForm(){
+            this.$refs.markForm.classList.add('hidden')
         }
+
     },
 
 })
+
+
+function getCookie(name){
+    /* 获取cookie中的csrftoken */
+    var name = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++){
+        var c = ca[i].trim();
+        if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+    }
+    return "";
+}

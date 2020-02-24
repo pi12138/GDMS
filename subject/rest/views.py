@@ -1,39 +1,20 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+import datetime
 
 from django.core.paginator import Paginator
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from subject.models import Subject
 from .serializers import SubjectSerializer
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PendingSubjectViewSet(ViewSet):
     """
     待审批课题
     """
-
-    # def list(self, request):
-    #     page = request.query_params.get('page', 1)
-    #     page = int(page)
-    #
-    #     query_set = Subject.objects.filter(review_result=0).order_by('-declare_time')
-    #     pagi = Paginator(query_set, 10)
-    #
-    #     if page > pagi.num_pages:
-    #         page = pagi.num_pages
-    #
-    #     pa = pagi.page(page)
-    #     obj_list = pa.object_list
-    #
-    #     ser = SubjectSerializer(instance=obj_list, many=True)
-    #     data = {
-    #         'result': ser.data,
-    #         'next_url': "",
-    #         'previous_url': "",
-    #         'count': pa.count
-    #     }
-    #
-    #     return Response(ser.data)
 
     def list(self, request):
 
@@ -42,6 +23,23 @@ class PendingSubjectViewSet(ViewSet):
         res = self.pagination(ser.data, request)
 
         return Response(res)
+
+    def partial_update(self, request, pk=None):
+
+        data = request.data
+        subjects = Subject.objects.filter(id=pk)
+        if not subjects.exists():
+            return Response({'error': '当前课题不存在！'}, status=400)
+
+        data['reviewer'] = request.user.administrator.id
+        data['review_time'] = datetime.datetime.now()
+
+        ser = SubjectSerializer(instance=subjects[0], data=data)
+        if not ser.is_valid():
+            return Response({'error': "发生错误", 'error_code': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'results': ser.data, 'msg': '审核成功'})
 
     def pagination(self, data, request):
         page = request.query_params.get('page', 1)
