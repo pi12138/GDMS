@@ -1,8 +1,11 @@
 from django.conf.urls import url
 
-from subject.rest.views import PendingSubjectView
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    # url(r'^student_settings/$', StudentUserSettingsView.as_view(), name='student-settings'),
-    url(r'^pending_subject/$', PendingSubjectView.as_view(), name='pending-subject'),
-]
+from subject.rest.views import PendingSubjectViewSet
+
+
+router = DefaultRouter()
+router.register(r'pending_subject', PendingSubjectViewSet, "pending-subject")
+
+urlpatterns = router.urls

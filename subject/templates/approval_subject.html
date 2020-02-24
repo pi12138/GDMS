@@ -9,6 +9,7 @@
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/approval_subject.css">
 </head>
 
 <body>
@@ -66,50 +67,153 @@
               </thead>
               <tbody>
 
-                {% for p in page.object_list %}
-                <tr>
-                    <td>{{ p.id }}</td>
-                    <td><a href="#" @click="showSubjectInfo({{ p.id }})">{{ p.subject_name }}</a></td>
-                    <td>{{ p.number_of_people }}</td>
-                    <td>{{ p.reviewer | handler_none }}</td>
-                    <td>{{ p.get_review_result_display }}</td>
-                    <td>{{ p.select_student | handler_none }}</td>
-                    <td>{{ p.declare_time }}</td>
-                </tr>
-                {% endfor %}
+              <tr v-for="(pending, index) in pendingList" :key="pending.id">
+                  <td v-text="pending.id"></td>
+                  <td><a href="#" v-text="pending.subject_name" @click="getSubjectInfo(index)"></a></td>
+                  <td v-text="pending.number_of_people"></td>
+                  <td v-text="pending.teacher_name"></td>
+                  <td v-text="pending.declare_time"></td>
+                  <td v-text="pending.review_result"></td>
+              </tr>
 
               </tbody>
             </table>
 
+            <!-- 分页 -->
             <div class="row">
-                <div class="col-md-10 text-info" style="height: 78px;line-height: 78px;">
-                    一共 {{ page.paginator.count }} 记录， 当前 {{ page.number }} / {{ page.paginator.num_pages }} 页
+                <div class="col-md-10 text-info" style="height: 78px;line-height: 78px;" v-text="'一共'+count+'条记录， 当前'+page+'/'+numPages+'页'">
                 </div>
 
                  <nav class="pull-right col-md-2">
                       <ul class="pagination">
-                          {% if page.has_previous %}
-                               <li class=""><a href="/subject/declare_subject/?page={{ page.previous_page_number }}">
-                                   <span aria-hidden="true">&laquo;</span></a></li>
-                          {% else %}
-                               <li class="disabled"><a href="#"><span aria-hidden="true">&laquo;</span></a></li>
-                          {% endif %}
-                        <li class="active"><a href="#">{{ page.number }}</a></li>
-
-                      {% if page.has_next %}
-                          <li class=""><a href="/subject/declare_subject/?page={{ page.next_page_number }}">
-                              <span class="aria-hidden">&raquo;</span></a></li>
-                      {% else %}
-                          <li class="disabled"><a href="#"><span class="aria-hidden">&raquo;</span></a></li>
-                      {% endif %}
-
-
+                        <li class="" ref="previousBtn">
+                            <a @click.prevent="getPendingList(previousUrl)">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="#" v-text="page"></a>
+                        </li>
+                        <li class="" ref="nextBtn">
+                            <a @click.prevent="getPendingList(nextUrl)">
+                                <span class="aria-hidden">&raquo;</span>
+                            </a>
+                        </li>
                       </ul>
                     </nav>
             </div>
 
         </div>
     </div>
+
+    <!-- 遮罩层 -->
+    <!-- 审批申报表 -->
+    <div class="container hidden" id="markForm" ref="markForm">
+        <div class="form" role="form">
+                <div class="row">
+                    <h3 class="text-center">审批申报表</h3>
+                    <hr>
+                </div>
+                </div>
+                <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="subject_name" class="">课题名称</label>
+                    <input type="text" class="form-control" placeholder="请输入课题名称" v-model="formData.subject_name" required>
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="teacher" class="">出题教师</label>
+                    <div class="form-control" v-text="formData.teacher_name"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="office">教研室</label>
+                    <div class="form-control" v-text="formData.office_name"></div>
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="number_of_people" class="">课题人数</label>
+                    <input type="number" class="form-control" id="number_of_people" placeholder="课题人数" v-model="formData.number_of_people" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="student">已选学生</label>
+                    <div class="form-control" v-text="formData.student_name"></div>
+                </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="">课题简述</label>
+                        <textarea name="" id="" cols="30" rows="5" class="form-control" placeholder="请填写课题简述" v-model="formData.subject_description" required></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="">预期目标</label>
+                        <textarea name="" id="" cols="30" rows="5" class="form-control" placeholder="请填写预期目标" v-model="formData.expected_goal" required></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="">对学生知识和能力的要求</label>
+                        <textarea name="" id="" cols="30" rows="5" class="form-control" placeholder="请填写对学生知识和能力的要求" v-model="formData.require" required></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="">所需条件</label>
+                        <textarea name="" id="" cols="30" rows="5" class="form-control" placeholder="请填写所需条件" v-model="formData.required_conditions" required></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="">参考资料</label>
+                        <textarea name="" id="" cols="30" rows="5" class="form-control" placeholder="请填写参考资料" v-model="formData.references" required></textarea>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="">审核人</label>
+                        <input type="text" value="{{ user|get_username }}" class="form-control" ref="reviewer" disabled>
+                        <input type="hidden" value="{{ user.id }}" ref="reviewerId">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">审核结果</label>
+                        <select name="review_result" id="" class="form-control" v-model="formData.review_result_number">
+                            <option value="0">待审核</option>
+                            <option value="1">审核通过</option>
+                            <option value="2">审核未通过</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="">未通过原因</label>
+                        <textarea cols="30" rows="5" v-model="formData.review_reason" class="form-control" placeholder="如果未通过请填写原因"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <button class="form-control btn btn-primary" title="提交当前修改的申报表" ref="submitBtn">提交当前修改</button>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <button class="form-control btn btn-default" title="关闭当前申报表">关闭当前</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+
 
     <script src="/static/js/vue.js"></script>
     <script src="/static/js/axios.min.js"></script>
