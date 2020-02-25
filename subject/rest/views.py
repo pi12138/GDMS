@@ -3,14 +3,11 @@ from rest_framework.response import Response
 import datetime
 
 from django.core.paginator import Paginator
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
 from subject.models import Subject
 from .serializers import SubjectSerializer
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class PendingSubjectViewSet(ViewSet):
     """
     待审批课题
@@ -41,7 +38,8 @@ class PendingSubjectViewSet(ViewSet):
         ser.save()
         return Response({'results': ser.data, 'msg': '审核成功'})
 
-    def pagination(self, data, request):
+    @staticmethod
+    def pagination(data, request):
         page = request.query_params.get('page', 1)
         page = int(page)
         path = request.path
@@ -77,3 +75,17 @@ class PendingSubjectViewSet(ViewSet):
         }
 
         return response_data
+
+
+class PassedSubjectViewSet(ViewSet):
+    """
+    审核通过课题
+    """
+
+    def list(self, request):
+        query_set = Subject.objects.filter(review_result=1)
+        ser = SubjectSerializer(instance=query_set, many=True)
+        res = PendingSubjectViewSet.pagination(ser.data, request)
+
+        return Response(res)
+

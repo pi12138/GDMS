@@ -125,3 +125,11 @@ class ApprovalSubject(LoginRequiredMixin, View):
 
     def post(self, request):
         pass
+
+
+class PassedSubject(LoginRequiredMixin, View):
+    """
+    审核通过课题
+    """
+    def get(self, request):
+        return render(request, 'passed_subject.html')

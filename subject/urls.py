@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import DeclareSubject, AlterSubject, ApprovalSubject
+from .views import DeclareSubject, AlterSubject, ApprovalSubject, PassedSubject
 
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     url(r"^declare_subject/$", DeclareSubject.as_view(), name="declare-subject"),
     url(r"^alter_subject/$", AlterSubject.as_view(), name="alter-subject"),
     url(r'^approval_subject/$', ApprovalSubject.as_view(), name="approval-subject"),
+    url(r'^passed_subject/$', PassedSubject.as_view(), name='passed-subject'),
 ]

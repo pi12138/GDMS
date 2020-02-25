@@ -78,6 +78,7 @@ const markForm = new Vue({
             axios.patch(url, this.formData, headers)
                 .then(res => {
                     console.log(res)
+                    alert(res.data.msg)
                 })
                 .catch(error => {
                     console.log(error)
