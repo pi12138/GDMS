@@ -283,6 +283,13 @@
                     </div>
                 </div>
 
+                <div class="row hidden" ref="hidden_div">
+                    <div class="form-group col-md-12">
+                        <label for="">未通过原因</label>
+                        <textarea name="" id="" cols="30" rows="3" class="form-control" v-model="review_reason" disabled></textarea>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="form-group col-md-3">
                         <button class="form-control btn btn-primary" @click="alterSubject" title="提交当前修改的申报表" ref="submitBtn">提交当前修改</button>

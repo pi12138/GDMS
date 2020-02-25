@@ -16,7 +16,7 @@ import datetime
 @method_decorator(csrf_exempt, name='dispatch')
 class DeclareSubject(LoginRequiredMixin, View):
     """
-    申报课题
+    教师功能：申报课题
     """
 
     def get(self, request):
@@ -79,7 +79,7 @@ class DeclareSubject(LoginRequiredMixin, View):
 @method_decorator(csrf_exempt, 'dispatch')
 class AlterSubject(LoginRequiredMixin, View):
     """
-    修改单个课题
+    教师功能：修改单个课题
     """
     def get(self, request):
         subject_id = request.GET.get('subject_id')
@@ -101,6 +101,10 @@ class AlterSubject(LoginRequiredMixin, View):
         subject_id = data.get('subject_id')
         data['declare_time'] = datetime.datetime.now()
 
+        if data['review_result_number'] == 2:
+            data['review_result_number'] = 0
+            data['review_reason'] = ""
+
         query_set = Subject.objects.filter(id=subject_id)
         if not query_set.exists():
             return JsonResponse({'msg': "该课题不存在"}, safe=False, status=400)
@@ -112,12 +116,12 @@ class AlterSubject(LoginRequiredMixin, View):
             return JsonResponse({'msg': "修改失败", 'data': ser.errors}, safe=False, status=400)
 
         ser.save()
-        return JsonResponse({'msg': "修改成功", 'data': ser.validated_data}, safe=False, status=200)
+        return JsonResponse({'msg': "修改成功", 'data': ser.data}, safe=False, status=200)
 
 
 class ApprovalSubject(LoginRequiredMixin, View):
     """
-    审核课题
+    管理员功能：审核课题
     """
 
     def get(self, request):
@@ -129,7 +133,7 @@ class ApprovalSubject(LoginRequiredMixin, View):
 
 class PassedSubject(LoginRequiredMixin, View):
     """
-    审核通过课题
+    管理员功能：审核通过课题
     """
     def get(self, request):
         return render(request, 'passed_subject.html')

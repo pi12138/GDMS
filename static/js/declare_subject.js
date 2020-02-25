@@ -134,6 +134,8 @@ var mark_form = new Vue({
         requiredConditions: "",
         references:"",
         review_result: "",
+        review_reason: "",
+        review_result_number: "",
 
         teacher_id: "",
         student_id: "",
@@ -153,11 +155,14 @@ var mark_form = new Vue({
             this.requiredConditions = data.required_conditions
             this.references = data.references
             this.review_result = data.review_result
+            this.review_reason = data.review_reason
+            this.review_result_number = data.review_result_number
 
             this.teacher_id = data.questioner
             this.student_id = data.select_student
             this.subject_id = data.id
 
+            this.setHiddenDiv()
         },
 
         setMarkFormShow(){
@@ -188,7 +193,8 @@ var mark_form = new Vue({
                 require: this.require,
                 required_conditions: this.requiredConditions,
                 references: this.references,
-                subject_id: this.subject_id
+                subject_id: this.subject_id,
+                review_result_number: this.review_result_number
             }
             axios.post(url, data)
                 .then(function (res) {
@@ -211,6 +217,17 @@ var mark_form = new Vue({
                     console.log(error.response)
                     alert('修改失败，发生错误')
                 })
+        },
+
+        setHiddenDiv(){
+            /* 设置 未通过原因 div 是否需要隐藏 */
+            if (this.review_result_number === 2){
+                this.$refs.hidden_div.classList.remove('hidden')
+
+                return
+            }
+
+            return
         }
     }
 })
