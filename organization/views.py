@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 # Create your views here.
-from organization.models import Faculty, Profession, Direction, Klass
+from organization.models import Faculty, Profession, Direction, Klass, Office
 
 
 def get_faculty(request):
@@ -67,3 +66,24 @@ def get_klass_from_directions(request):
         klasses.append(klass)
 
     return JsonResponse(klasses, safe=False)
+
+
+def get_office_from_faculty(request):
+    """
+    根据学院id获取所有教研室
+    :param request:
+    :return:
+    """
+    faculty = request.GET.get('faculty')
+    if not faculty:
+        return JsonResponse("未传入学院参数")
+
+    query_set = Office.objects.filter(faculty_id=faculty)
+    offices = []
+    for i in query_set:
+        office = dict()
+        office['id'] = i.id
+        office['name'] = i.name
+        offices.append(office)
+
+    return JsonResponse(offices, safe=False)

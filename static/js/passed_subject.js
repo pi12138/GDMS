@@ -1,3 +1,5 @@
+/* 管理员功能： 查看已通过课题 */
+
 var passedList = new Vue({
     el: "#passedList",
     data: {

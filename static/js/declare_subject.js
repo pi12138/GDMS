@@ -1,3 +1,5 @@
+/* 教师功能： 申报课题  */
+
 var app = new Vue({
     el:"#app",
     data:{

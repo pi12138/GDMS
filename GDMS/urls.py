@@ -30,5 +30,6 @@ urlpatterns = [
     path('import_data/', include(('import_data.urls', 'import_data'), namespace='import_data')),
 
     # path('api/login/', include(('login.rest.urls', 'login'), namespace='api-login')),
-    path('api/subject/', include(('subject.rest.urls', 'subject'), namespace='api-subject'))
+    path('api/subject/', include(('subject.rest.urls', 'subject'), namespace='api-subject')),
+    path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),
 ]

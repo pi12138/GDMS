@@ -1,3 +1,5 @@
+/* 管理员功能： 审批课题  */
+
 const pendingList = new Vue({
     el: '#pendingList',
     data: {

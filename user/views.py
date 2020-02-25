@@ -131,3 +131,12 @@ class AdminSettings(LoginRequiredMixin, View):
             'name': admin.name
         }
         return render(request, 'admin_settings.html', context)
+
+
+class TeacherSettings(LoginRequiredMixin, View):
+    """
+    教师设置
+    """
+
+    def get(self, request):
+        return render(request, 'teacher_settings.html')
