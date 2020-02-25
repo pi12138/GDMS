@@ -117,3 +117,17 @@ def change_password(request):
     user.save()
 
     return JsonResponse("修改密码成功！", status=200, safe=False)
+
+
+class AdminSettings(LoginRequiredMixin, View):
+    """
+    管理员设置
+    """
+
+    def get(self, request):
+        admin = request.user.administrator
+        context = {
+            'faculty': admin.faculty,
+            'name': admin.name
+        }
+        return render(request, 'admin_settings.html', context)
