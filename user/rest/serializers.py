@@ -4,8 +4,8 @@ from user.models import Teacher
 
 
 class TeacherSettingsSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(source='account.email')
-    faculty_name = serializers.CharField(source='faculty.name')
+    email = serializers.CharField(source='account.email', read_only=True)
+    faculty_name = serializers.CharField(source='faculty.name', read_only=True)
 
     class Meta:
         model = Teacher

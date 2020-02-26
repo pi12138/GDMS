@@ -63,7 +63,7 @@
 
                     <div class="form-group col-md-6">
                         <label for="">性别</label>
-                        <select name="" id="" v-model="formData.gender" class="form-control">
+                        <select v-model="formData.gender" class="form-control">
                             <option value="0">男</option>
                             <option value="1">女</option>
                         </select>
@@ -73,7 +73,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">学历</label>
-                        <select name="" id="" class="form-control" v-model="formData.education">
+                        <select class="form-control" v-model="formData.education">
                             <option value="0">学士</option>
                             <option value="1">硕士</option>
                             <option value="2">博士</option>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">职称</label>
-                        <select name="" id="" class="form-control" v-model="formData.teacher_title">
+                        <select class="form-control" v-model="formData.teacher_title">
                             <option value="0">助教</option>
                             <option value="1">讲师</option>
                             <option value="2">副教授</option>
@@ -104,28 +104,57 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">邮箱</label>
-                        <input type="text" class="form-control" v-model="formData.email">
+                        <input type="email" class="form-control" v-model="formData.email">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">学院</label>
-                        <input name="" id="" v-model="formData.faculty_name" class="form-control" disabled>
+                        <input name="" v-model="formData.faculty_name" class="form-control" disabled>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">教研室</label>
-                        <select name="" id="" v-model="formData.office" class="form-control">
+                        <select name="" v-model="formData.office" class="form-control">
                             <option v-for="(item, index) in officeList" :key="item.id" :value="item.id" v-text="item.name"></option>
                         </select>
                     </div>
 
                     <div class="form-group col-md-2 col-md-push-2">
                         <label for="" style="height: 20px;"></label>
-                        <button class="form-control btn btn-primary">提交修改</button>
+                        <button class="form-control btn btn-primary" @click="submitFormData">提交修改</button>
                     </div>
                 </div>
             </form>
+
+    </div>
+
+    <div class="container" id="app">
+                <!-- 修改密码 -->
+        <div class="page-header">
+            <h3>个人设置 <small>其他设置</small></h3>
+        </div>
+        <div style="margin-bottom: 10px;"><button class="btn btn-default" @click="is_show=true">修改密码</button></div>
+        <div v-show="is_show" id="change_password_div">
+            <form action="" class="form-inline" onsubmit="return false">
+                <div class="form-group">
+                    <label for="">原密码</label>
+                    <input type="text" class="form-control" name="old_password" placeholder="请输入原密码" v-model="oldPassword">
+                </div>
+                <div class="form-group">
+                    <label for="">新密码</label>
+                    <input type="password" class="form-control" name="new_password1" placeholder="请输入新密码" v-model="newPassword1">
+                </div>
+                <div class="form-group">
+                    <label for="">确认密码</label>
+                    <input type="password" class="form-control" name="new_password2" placeholder="请输入新密码" v-model="newPassword2">
+                </div>
+                <div class="form-group">
+                    <input type="button" class="form-control" value="确认" @click="changePassword">
+                    <input type="button" value="取消" class="form-control" @click="canelChange">
+                </div>
+            </form>
+        </div>
     </div>
 
 
