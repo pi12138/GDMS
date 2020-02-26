@@ -137,3 +137,11 @@ class PassedSubject(LoginRequiredMixin, View):
     """
     def get(self, request):
         return render(request, 'passed_subject.html')
+
+
+class SelectSubject(LoginRequiredMixin, View):
+    """
+    学生功能： 选择课题
+    """
+    def get(self, request):
+        return render(request, 'select_subject.html')
