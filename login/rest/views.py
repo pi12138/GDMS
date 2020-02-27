@@ -10,4 +10,4 @@ class TestViewSet(ViewSet):
     def list(self, request):
         role = get_role(request.user)
 
-        return Response({"role": role})
+        return Response({"role": role[0]})

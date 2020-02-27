@@ -24,10 +24,10 @@ class Student(models.Model):
 
     name = models.CharField(max_length=30, verbose_name="学生姓名")
     gender = models.IntegerField(choices=GENDER, verbose_name="性别", default=0)
-    klass = models.ForeignKey(to=Klass, on_delete=models.CASCADE, verbose_name="班级")
-    diretcion = models.ForeignKey(to=Direction, on_delete=models.CASCADE, verbose_name="方向")
-    profession = models.ForeignKey(to=Profession, on_delete=models.CASCADE, verbose_name="专业")
-    faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
+    klass = models.ForeignKey(to=Klass, on_delete=models.CASCADE, verbose_name="班级", blank=True, null=True)
+    diretcion = models.ForeignKey(to=Direction, on_delete=models.CASCADE, verbose_name="方向", blank=True, null=True)
+    profession = models.ForeignKey(to=Profession, on_delete=models.CASCADE, verbose_name="专业", blank=True, null=True)
+    faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院", blank=True, null=True)
     phone = models.CharField(max_length=30, verbose_name="联系方式")
     qq = models.CharField(max_length=30, verbose_name="QQ")
     # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
@@ -65,8 +65,8 @@ class Teacher(models.Model):
     teacher_title = models.IntegerField(choices=TEACHER_TITLE, verbose_name="职称", default=1)
     phone = models.CharField(max_length=30, verbose_name="联系方式")
     qq = models.CharField(max_length=30, verbose_name="QQ")
-    office = models.ForeignKey(to=Office, on_delete=models.CASCADE, verbose_name="教研室")
-    faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
+    office = models.ForeignKey(to=Office, on_delete=models.CASCADE, verbose_name="教研室", blank=True, null=True)
+    faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院", blank=True, null=True)
     # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     is_monitor = models.BooleanField(default=False, verbose_name="是否是教研室负责人")
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
@@ -79,9 +79,10 @@ class Administrator(models.Model):
     """
     管理员模型
     """
-    faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院")
+    faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE, verbose_name="学院", blank=True, null=True)
     # account = models.ForeignKey(to=Account, on_delete=models.CASCADE, verbose_name="账户")
     account = models.OneToOneField(to=User, on_delete=models.CASCADE, verbose_name='账户')
+    name = models.CharField(verbose_name="姓名", max_length=30, default="", blank=True, null=True)
 
     def __str__(self):
-        return self.account.username
+        return self.name

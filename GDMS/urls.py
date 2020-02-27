@@ -17,14 +17,19 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 
-from rest_framework_jwt.views import obtain_jwt_token
+# from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('login.urls', 'login'), namespace='login')),
-    url(r'^login/', obtain_jwt_token),
+    path("user/", include(('user.urls', 'user'), namespace="user")),
+    path("organization/", include(("organization.urls", "organization"), namespace="organization")),
+    path("subject/", include(("subject.urls", "subject"), namespace="subject")),
+    # url(r'^login/', obtain_jwt_token),
 
     path('import_data/', include(('import_data.urls', 'import_data'), namespace='import_data')),
 
-    path('api/login/', include(('login.rest.urls', 'login'), namespace='api-login')),
+    # path('api/login/', include(('login.rest.urls', 'login'), namespace='api-login')),
+    path('api/subject/', include(('subject.rest.urls', 'subject'), namespace='api-subject')),
+    path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),
 ]
