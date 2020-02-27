@@ -17,7 +17,7 @@ class Subject(models.Model):
     subject_name = models.CharField(verbose_name="课题名称", max_length=100)
     questioner = models.ForeignKey(to=Teacher, on_delete=models.CASCADE, verbose_name="出题人")
     number_of_people = models.IntegerField(verbose_name="课题人数", default=1)
-    select_student = models.ForeignKey(to=Student, on_delete=models.CASCADE, verbose_name="选题学生", blank=True, null=True,
+    select_student = models.OneToOneField(to=Student, on_delete=models.CASCADE, verbose_name="选题学生", blank=True, null=True,
                                        related_name='select_student')
     subject_description = models.TextField(verbose_name="课题描述")
     expected_goal = models.TextField(verbose_name="预期目标")

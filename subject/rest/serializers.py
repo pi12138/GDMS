@@ -5,11 +5,15 @@ from subject.models import Subject
 
 class SubjectSerializer(serializers.ModelSerializer):
     teacher_name = serializers.CharField(source='questioner.name', read_only=True)
+    teacher_phone = serializers.CharField(source='questioner.phone', read_only=True)
+    teacher_qq = serializers.CharField(source='questioner.qq', read_only=True)
+    teacher_email = serializers.CharField(source='questioner.account.email', read_only=True)
     office_name = serializers.CharField(source='questioner.office.name', read_only=True)
     student_name = serializers.SerializerMethodField(method_name="get_student")
     review_result = serializers.SerializerMethodField(method_name='get_review_result')
     reviewer_name = serializers.SerializerMethodField(method_name='get_reviewer_name')
     review_result_number = serializers.IntegerField(source='review_result')
+    apply_student_name = serializers.CharField(source='apply_students')
 
     def get_student(self, obj):
         if not obj.select_student:
