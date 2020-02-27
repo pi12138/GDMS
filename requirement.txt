@@ -27,7 +27,6 @@ ptyprocess==0.6.0
 Pygments==2.5.2
 PyJWT==1.7.1
 pylint==2.4.4
-PyMySQL==0.9.3
 pytz==2019.3
 six==1.14.0
 sqlparse==0.3.0
