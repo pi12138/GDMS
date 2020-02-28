@@ -140,3 +140,13 @@ class TeacherSettings(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, 'teacher_settings.html')
+
+
+def student_subject(request):
+    """
+    学生申请课题和已经确定的课题
+    """
+    user = request.user.student
+
+    if hasattr(user, 'apply_students'):
+        pass

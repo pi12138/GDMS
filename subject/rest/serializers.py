@@ -13,7 +13,6 @@ class SubjectSerializer(serializers.ModelSerializer):
     review_result = serializers.SerializerMethodField(method_name='get_review_result')
     reviewer_name = serializers.SerializerMethodField(method_name='get_reviewer_name')
     review_result_number = serializers.IntegerField(source='review_result')
-    apply_student_name = serializers.CharField(source='apply_students')
 
     def get_student(self, obj):
         if not obj.select_student:

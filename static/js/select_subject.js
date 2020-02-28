@@ -7,6 +7,7 @@ var subjectList = new Vue({
         tableData: "",
         subjectName: "",
         office: 0,
+        officeList: "",
         questioner: "",
         nextUrl: "",
         previousUrl: "",
@@ -87,6 +88,24 @@ var subjectList = new Vue({
                     // alert("Error")
                     alert(error.response.data)
                 })
+        },
+
+        getOfficeList() {
+            const url = 'http://127.0.0.1:8000/organization/offices/'
+            const params = {
+                'faculty': document.getElementsByName('facultyId')[0].value
+            }
+            axios.get(url, {params: params})
+                .then(res => {
+                    console.log(res)
+                    const defaultData = {id: 0, name: "请选择教研室"}
+                    res.data.push(defaultData)
+
+                    this.officeList = res.data
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
         }
 
     },
@@ -110,6 +129,7 @@ var subjectList = new Vue({
     beforeMount(){
         const url = 'http://127.0.0.1:8000/api/subject/select_subject/'
         this.getSubjectList(url)
+        this.getOfficeList()
     }
 
 })
