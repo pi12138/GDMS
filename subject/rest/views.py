@@ -5,8 +5,8 @@ import datetime
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from subject.models import Subject
-from .serializers import SubjectSerializer
+from subject.models import Subject, ApplySubject
+from .serializers import SubjectSerializer, ApplySubjectSerializer
 
 
 class PendingSubjectViewSet(ViewSet):
@@ -119,31 +119,70 @@ class SelectSubjectViewSet(ViewSet):
 
         return Response(res)
 
-    def update(self, request, pk=None):
-        if not pk:
+    # def update(self, request, pk=None):
+    #     if not pk:
+    #         return Response("请传入课题参数", status=400)
+    #
+    #     user = request.user.student
+    #     if hasattr(user, 'select_student'):
+    #         return Response("你已经选择了课题!", status=400)
+    #     if hasattr(user, 'apply_students'):
+    #         return Response("你已经申请了课题,课题编号: {},请等待老师审核!".format(user.apply_students.id), status=400)
+    #
+    #     sub = Subject.objects.filter(id=pk)
+    #     if not sub.exists():
+    #         return Response("该课题不存在!", status=400)
+    #
+    #     sub = sub[0]
+    #     if sub.select_student:
+    #         return Response("该课题已经有人选择,请选择其他课题", status=400)
+    #     if sub.apply_students:
+    #         return Response("该课题已经有人申请,请申请其他课题", status=400)
+    #
+    #     sub.apply_students = user
+    #     sub.save()
+    #
+    #     return Response("选题成功! 请等待老师审核.")
+
+    def create(self, request):
+        subject = request.data.get('subject')
+        if not subject:
             return Response("请传入课题参数", status=400)
 
-        user = request.user.student
-        if hasattr(user, 'select_student'):
-            return Response("你已经选择了课题!", status=400)
-        if hasattr(user, 'apply_students'):
-            return Response("你已经申请了课题,课题编号: {},请等待老师审核!".format(user.apply_students.id), status=400)
+        student = request.user.student
+        subs = Subject.objects.filter(id=subject)
+        if not subs.exists():
+            return Response("该课题不存在", status=400)
 
-        sub = Subject.objects.filter(id=pk)
-        if not sub.exists():
-            return Response("该课题不存在!", status=400)
+        sub = subs[0]
 
-        sub = sub[0]
         if sub.select_student:
             return Response("该课题已经有人选择,请选择其他课题", status=400)
-        if sub.apply_students:
-            return Response("该课题已经有人申请,请申请其他课题", status=400)
 
-        sub.apply_students = user
-        sub.save()
+        query_set = ApplySubject.objects.filter(student_id=student.id)
+        if query_set.exists():
+            latest_apply = query_set.order_by('-apply_time')[0]
+            if latest_apply.apply_result == 0:
+                return Response("你已经申请了课题,课题编号: {},请等待老师审核!".format(latest_apply.subject_id), status=400)
+            elif latest_apply.apply_result == 1:
+                return Response("你已经选择了课题!课题编号: {}".format(latest_apply.subject_id), status=400)
 
-        return Response("选题成功! 请等待老师审核.")
+        query_set = ApplySubject.objects.filter(subject_id=sub.id)
+        if query_set.exists():
+            latest_apply = query_set.order_by('-apply_time')[0]
+            if latest_apply.apply_result in [0, 1]:
+                return Response("该课题已经有人申请, 请申请其他课题", status=400)
 
+        data = {
+            'subject': sub.id,
+            'student': student.id,
+            'apply_time': datetime.datetime.now(),
+            'apply_result': 0
+        }
+        ser = ApplySubjectSerializer(data=data)
+        if not ser.is_valid():
+            print(ser.errors)
+            return Response("Error", status=400)
 
-
-
+        ser.save()
+        return Response({'data': ser.data, 'msg': "选题成功!请等待老师审核"})

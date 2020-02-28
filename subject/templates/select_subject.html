@@ -89,7 +89,7 @@
                     <td v-text="item.office_name"></td>
                     <td><a href="#" v-text="item.teacher_name" :title="item | getInfo"></a></td>
                     <td v-text="item.student_name"></td>
-                    <td :title="item | getApplyInfo"><a href="#" v-if="item.apply_students==null" @click="selectSubject(item)">选题</a></td>
+                    <td :title="item | getApplyInfo"><a href="#" v-if="item.apply_student==null" @click="selectSubject(item)">选题</a></td>
                 </tr>
             </tbody>
         </table>

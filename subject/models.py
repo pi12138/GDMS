@@ -51,3 +51,7 @@ class ApplySubject(models.Model):
     student = models.ForeignKey(verbose_name="申请学生", to=Student, on_delete=models.CASCADE, blank=True, null=True)
     apply_time = models.DateTimeField(verbose_name="申请时间", blank=True, null=True)
     apply_result = models.IntegerField(verbose_name="申请结果", default=0)
+
+    def __str__(self):
+        return "{}---{}".format(self.subject, self.student)
+

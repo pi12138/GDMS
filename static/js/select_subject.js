@@ -67,19 +67,22 @@ var subjectList = new Vue({
         },
 
         selectSubject(subject){
-            const url = `http://127.0.0.1:8000/api/subject/select_subject/${subject.id}/`
+            const url = `http://127.0.0.1:8000/api/subject/select_subject/`
             const csrfToken = getCookie('csrftoken')
             const headers = {
                 headers: {
                     'X-CSRFToken': csrfToken
                 }
             }
+            const data = {
+                'subject': subject.id
+            }
 
 
-            axios.put(url, {}, headers)
+            axios.post(url, data, headers)
                 .then(res => {
                     console.log(res)
-                    alert(res.data)
+                    alert(res.data.msg)
                     location.reload()
                 })
                 .catch(error => {
@@ -118,10 +121,10 @@ var subjectList = new Vue({
 
         getApplyInfo: function (value) {
             /* 获取课题的申请状况并且给以提示 */
-            if (value.apply_students == null){
+            if (value.apply_student == null){
                 return "当前课题还无人申请"
             }else{
-                return `当前课题已经有人申请,申请人: ${value.apply_student_name}`
+                return `当前课题已经有人申请\n申请人: ${value.apply_student}`
             }
         }
     },

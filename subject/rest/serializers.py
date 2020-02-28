@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from subject.models import Subject
+from subject.models import Subject, ApplySubject
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -13,6 +13,7 @@ class SubjectSerializer(serializers.ModelSerializer):
     review_result = serializers.SerializerMethodField(method_name='get_review_result')
     reviewer_name = serializers.SerializerMethodField(method_name='get_reviewer_name')
     review_result_number = serializers.IntegerField(source='review_result')
+    apply_student = serializers.SerializerMethodField(method_name='get_apply_student')
 
     def get_student(self, obj):
         if not obj.select_student:
@@ -27,6 +28,17 @@ class SubjectSerializer(serializers.ModelSerializer):
             return ""
         return obj.reviewer.name
 
+    def get_apply_student(self, obj):
+        if hasattr(obj, 'applysubject_set'):
+            query_set = obj.applysubject_set.order_by('-apply_time')
+            if not query_set.exists():
+                return None
+            else:
+                latest_apply = query_set[0]
+                return latest_apply.student.name
+        else:
+            return None
+
     class Meta:
         model = Subject
         fields = "__all__"
@@ -35,3 +47,9 @@ class SubjectSerializer(serializers.ModelSerializer):
             'declare_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
             'select_student': {'read_only': True}
         }
+
+
+class ApplySubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplySubject
+        fields = "__all__"
