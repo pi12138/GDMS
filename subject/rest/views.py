@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ViewSet
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import datetime
 
@@ -119,31 +120,6 @@ class SelectSubjectViewSet(ViewSet):
 
         return Response(res)
 
-    # def update(self, request, pk=None):
-    #     if not pk:
-    #         return Response("请传入课题参数", status=400)
-    #
-    #     user = request.user.student
-    #     if hasattr(user, 'select_student'):
-    #         return Response("你已经选择了课题!", status=400)
-    #     if hasattr(user, 'apply_students'):
-    #         return Response("你已经申请了课题,课题编号: {},请等待老师审核!".format(user.apply_students.id), status=400)
-    #
-    #     sub = Subject.objects.filter(id=pk)
-    #     if not sub.exists():
-    #         return Response("该课题不存在!", status=400)
-    #
-    #     sub = sub[0]
-    #     if sub.select_student:
-    #         return Response("该课题已经有人选择,请选择其他课题", status=400)
-    #     if sub.apply_students:
-    #         return Response("该课题已经有人申请,请申请其他课题", status=400)
-    #
-    #     sub.apply_students = user
-    #     sub.save()
-    #
-    #     return Response("选题成功! 请等待老师审核.")
-
     def create(self, request):
         subject = request.data.get('subject')
         if not subject:
@@ -186,3 +162,34 @@ class SelectSubjectViewSet(ViewSet):
 
         ser.save()
         return Response({'data': ser.data, 'msg': "选题成功!请等待老师审核"})
+
+
+@api_view(["GET"])
+def my_subject(request):
+    """
+    学生功能：我的课题
+    """
+    student = request.user.student
+
+    select_subject = None
+    if hasattr(student, 'select_student'):
+        ser = SubjectSerializer(instance=student.select_student)
+        select_subject = ser.data
+
+    apply_subject = None
+    apply = student.applysubject_set.all()
+    if apply.exists():
+        app = apply.order_by('-apply_time')[0]
+        if app.apply_result == 0:
+            ser = SubjectSerializer(instance=app.subject)
+            apply_subject = ser.data
+
+    response = {
+        'select_subject': select_subject,
+        'apply_subject': apply_subject
+    }
+
+    return Response(response)
+
+
+

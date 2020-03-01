@@ -62,7 +62,7 @@
                 <input type="text" class="form-control">
             </div>
             <button class="form-control btn btn-primary">搜索</button>
-            <button class="form-control btn btn-default">我的课题</button>
+            <button class="form-control btn btn-default" @click="showMySubject">我的课题</button>
         </form>
 
         <br>
@@ -208,61 +208,64 @@
 
 
     <!-- 我的课题 -->
-    <div class="container" id="mySubject">
-        <h3>我的课题 <small>当前申请的课题</small></h3>
-        <hr>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>课题编号</th>
-                    <th>课题名称</th>
-                    <th>人数</th>
-                    <th>出题教研室</th>
-                    <th>出题导师</th>
-                    <th>确认学生</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="container hidden" id="mySubject" ref="mySubject">
+        <div id="applySubject" ref="applySubject" class="" v-if="applySubject">
+            <h3>我的课题 <small>当前申请的课题</small></h3>
+            <hr>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>课题编号</th>
+                        <th>课题名称</th>
+                        <th>人数</th>
+                        <th>出题教研室</th>
+                        <th>出题导师</th>
+                        <th>申请学生</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td v-text="applySubject.id"></td>
+                        <td v-text="applySubject.subject_name"></td>
+                        <td v-text="applySubject.number_of_people"></td>
+                        <td v-text="applySubject.office_name"></td>
+                        <td v-text="applySubject.teacher_name"></td>
+                        <td v-text="applySubject.apply_student"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <h3>我的课题 <small>确定的课题</small></h3>
-        <hr>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>课题编号</th>
-                    <th>课题名称</th>
-                    <th>人数</th>
-                    <th>出题教研室</th>
-                    <th>出题导师</th>
-                    <th>确认学生</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="selectSubject" ref="selectSubject" class="" v-if="selectSubject">
+            <h3>我的课题 <small>确定的课题</small></h3>
+            <hr>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>课题编号</th>
+                        <th>课题名称</th>
+                        <th>人数</th>
+                        <th>出题教研室</th>
+                        <th>出题导师</th>
+                        <th>确认学生</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td v-text="selectSubject.id"></td>
+                        <td v-text="selectSubject.subject_name"></td>
+                        <td v-text="selectSubject.number_of_people"></td>
+                        <td v-text="selectSubject.office_name"></td>
+                        <td v-text="selectSubject.teacher_name"></td>
+                        <td v-text="selectSubject.student_name"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
     </div>
+
+
     <script src="/static/js/vue.js"></script>
     <script src="/static/js/axios.min.js"></script>
     <script src="/static/js/select_subject.js"></script>

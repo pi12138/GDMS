@@ -109,6 +109,10 @@ var subjectList = new Vue({
                 .catch(error => {
                     console.log(error.response)
                 })
+        },
+
+        showMySubject(){
+            mySubject.showSubject()
         }
 
     },
@@ -184,9 +188,48 @@ const markForm = new Vue({
 
         closeForm(){
             this.$refs.markForm.classList.add('hidden')
-            window.location.href = '/subject/approval_subject/'
+            location.reload()
         }
 
     },
 
+})
+
+
+const mySubject = new Vue({
+    el: "#mySubject",
+    data: {
+        selectSubject: "",
+        applySubject: ""
+    },
+    methods: {
+        showSubject(){
+            this.$refs.mySubject.classList.remove('hidden')
+
+        },
+
+        getMySubject(){
+            const url = 'http://127.0.0.1:8000/api/subject/my_subject/'
+
+            axios.get(url)
+                .then(res => {
+                    const data = res.data
+                    console.log(data)
+
+                    this.selectSubject = data.select_subject
+                    this.applySubject = data.apply_subject
+                    // mySubject.showSubject()
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    console.log(error.response)
+                    alert("Error")
+                })
+        }
+    },
+
+    beforeMount() {
+        this.getMySubject()
+    }
 })
