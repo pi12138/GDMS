@@ -91,7 +91,8 @@ const markForm = new Vue({
 
         closeForm(){
             this.$refs.markForm.classList.add('hidden')
-            window.location.href = '/subject/approval_subject/'
+            // window.location.href = '/subject/approval_subject/'
+            location.reload()
         }
 
     },
