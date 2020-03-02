@@ -13,7 +13,9 @@ var subjectList = new Vue({
         previousUrl: "",
         count: "",
         numPages: "",
-        page: ""
+        page: "",
+
+        url: 'http://127.0.0.1:8000/api/subject/select_subject/'
     },
     methods: {
         getSubjectList(url){
@@ -134,7 +136,7 @@ var subjectList = new Vue({
     },
 
     beforeMount(){
-        const url = 'http://127.0.0.1:8000/api/subject/select_subject/'
+        const url = this.url
         this.getSubjectList(url)
         this.getOfficeList()
     }
