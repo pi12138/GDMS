@@ -15,8 +15,12 @@ def get_username(val):
 def handler_none(val):
     """
     当模版中返回None时将其处理为空字符串
+    如果不是该对象name
     """
-    return ""
+    if val is None:
+        return ""
+    else:
+        return val.name
 
 
 @register.filter
