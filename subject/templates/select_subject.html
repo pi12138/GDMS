@@ -61,8 +61,8 @@
                 <label for=""> 出题教师:</label>
                 <input type="text" class="form-control" v-model="questioner">
             </div>
-            <button class="form-control btn btn-primary" @click="getSubjectList(url)">搜索</button>
-            <button class="form-control btn btn-default" @click="showMySubject">我的课题</button>
+            <input type="button" class="form-control btn btn-primary" @click="getSubjectList(url)" value="搜索">
+            <input type="button" class="form-control btn btn-default" @click="showMySubject" value="我的课题">
         </form>
 
         <br>

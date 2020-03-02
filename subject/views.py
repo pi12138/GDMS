@@ -146,3 +146,11 @@ class SelectSubject(LoginRequiredMixin, View):
     """
     def get(self, request):
         return render(request, 'select_subject.html')
+
+
+class ApprovalApplication(LoginRequiredMixin, View):
+    """
+    老师功能： 审批学生的选题申请
+    """
+    def get(self, request):
+        return render(request, 'approval_application.html')

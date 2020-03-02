@@ -192,4 +192,35 @@ def my_subject(request):
     return Response(response)
 
 
+class ApprovalApplicationViewSet(ViewSet):
+    """
+    教师功能: 审批学生选题申请
+    """
+    def list(self, request):
+        query_set = ApplySubject.objects.filter(apply_result__in=[0, 1]).order_by('apply_result', '-apply_time')
+        ser = ApplySubjectSerializer(instance=query_set, many=True)
+        res_data = PendingSubjectViewSet.pagination(ser.data, request)
 
+        return Response(res_data)
+
+    def partial_update(self, request, pk=None):
+        data = request.data
+        apply_result = int(data.get('apply_result', 0))
+        if not pk:
+            return Response("为传入申请参数")
+
+        apps = ApplySubject.objects.filter(pk=pk)
+        if not apps.exists():
+            return Response("该申请不存在")
+
+        app = apps[0]
+        ser = ApplySubjectSerializer(instance=app, data=data)
+
+        if not ser.is_valid():
+            return Response({'error': ser.errors}, status=400)
+
+        if apply_result == 1:
+            app.subject.select_student_id = app.student_id
+            app.subject.save()
+        ser.save()
+        return Response(ser.data)
