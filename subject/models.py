@@ -68,15 +68,15 @@ class TaskBook(models.Model):
 
     subject = models.OneToOneField(Subject, verbose_name="所属课题", on_delete=models.CASCADE, related_name='task_book')
     release_time = models.DateTimeField(verbose_name="任务书下达时间")
-    subject_desc = models.TextField(verbose_name="课题简述")
-    purpose_and_significance = models.TextField(verbose_name="研究的目的意义")
-    content_and_technology = models.TextField(verbose_name="主要的内容和技术")
-    data_and_information = models.TextField(verbose_name="原始的数据和资料")
-    schedule = models.TextField(verbose_name="进度安排")
-    references = models.TextField(verbose_name="参考资料")
-    information_in_English = models.TextField(verbose_name="英文资料翻译要求")
+    subject_desc = models.TextField(verbose_name="课题简述", default="", blank=True, null=True)
+    purpose_and_significance = models.TextField(verbose_name="研究的目的意义", default="", blank=True, null=True)
+    content_and_technology = models.TextField(verbose_name="主要的内容和技术", default="", blank=True, null=True)
+    data_and_information = models.TextField(verbose_name="原始的数据和资料", default="", blank=True, null=True)
+    schedule = models.TextField(verbose_name="进度安排", default="", blank=True, null=True)
+    references = models.TextField(verbose_name="参考资料", default="", blank=True, null=True)
+    information_in_English = models.TextField(verbose_name="英文资料翻译要求", default="", blank=True, null=True)
     reviewer = models.ForeignKey(Administrator, verbose_name="审核人", on_delete=models.CASCADE, blank=True, null=True)
-    review_time = models.DateTimeField(verbose_name="审核时间")
+    review_time = models.DateTimeField(verbose_name="审核时间", blank=True, null=True)
     review_result = models.IntegerField(verbose_name="审核结果", choices=REVIEW_RESULT_VALUE, default=0)
 
     def __str__(self):

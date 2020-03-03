@@ -69,7 +69,7 @@
                       <td v-text="item.id"></td>
                       <td v-text="item.subject_name"></td>
                       <td v-text="item.select_student.name"></td>
-                      <td v-html="handleTaskBook(item.task_book)" @click="writeOrViewTaskBook(item.task_book)"></td>
+                      <td v-html="handleTaskBook(item.task_book)" @click="writeOrViewTaskBook(index)"></td>
                       <td></td>
                   </tr>
 
@@ -105,7 +105,7 @@
 
 
     <!-- 任务书遮罩层 -->
-    <div id="taskBookForm" class="container hidden">
+    <div id="taskBookForm" class="container hidden" ref="taskBook">
         <form action="" class="form">
             <div class="row">
                 <h3 class="col-md-12 text-center">填报或查看任务书</h3>
@@ -114,79 +114,79 @@
             <div class="row">
                 <div class="form-group col-md-8">
                     <label for="">课题名称</label>
-                    <input type="text" v-model="" class="form-control">
+                    <input type="text" v-model="subjectName" class="form-control" disabled>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">下达时间</label>
-                    <input type="text" v-mode;="" class="form-control" disabled placeholder="不用填写,自动获取">
+                    <input type="text" v-model="releaseTime" class="form-control" disabled placeholder="不用填写,自动获取">
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">课题简述</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="subjectDesc"></textarea>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">研究的目的和意义</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="purposeAndSignificance"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">主要的内容及技术</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="contentAndTechnology"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">原始数据和资料</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="dataAndInformation"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">进度安排</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="schedule"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">参考资料</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="references"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">英文资料翻译要求</label>
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                    <textarea cols="30" rows="3" class="form-control" v-model="informationInEnglish"></textarea>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="">审核人</label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="text" class="form-control" disabled v-model="reviewerName">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">审核结果</label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="text" class="form-control" disabled v-model="reviewResult">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">审核时间</label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="text" class="form-control" disabled v-model="reviewTime">
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-md-3">
-                    <input type="submit" value="提交任务书" class="form-control btn btn-primary">
+                    <input type="button" value="提交任务书" class="form-control btn btn-primary" @click="submitTaskBookData">
                 </div>
                 <div class="form-group col-md-3">
-                    <input type="button" value="关闭表单" class="form-control">
+                    <input type="button" value="关闭表单" class="form-control" @click="hiddenTaskBook">
                 </div>
             </div>
 

@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 
 from subject.models import Subject, ApplySubject
-from .serializers import SubjectSerializer, ApplySubjectSerializer, SubjectInfoSerializer
+from .serializers import SubjectSerializer, ApplySubjectSerializer, SubjectInfoSerializer, TaskBookSerializer
 
 
 class PendingSubjectViewSet(ViewSet):
@@ -255,3 +255,11 @@ class TaskBookViewSet(ViewSet):
 
     def create(self, request):
         data = request.data
+        data['release_time'] = datetime.datetime.now()
+        ser = TaskBookSerializer(data=data)
+
+        if not ser.is_valid():
+            return Response({'msg': "数据不合法", 'error': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data, 'msg': "ok"})

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from subject.models import Subject, ApplySubject
+from subject.models import Subject, ApplySubject, TaskBook
 from user.models import Student
 
 
@@ -109,3 +109,12 @@ class SubjectInfoSerializer(serializers.ModelSerializer):
             'declare_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
             'review_time': {'format': '%Y-%m-%d %H:%M:%S', 'read_only': True}
         }
+
+
+class TaskBookSerializer(serializers.ModelSerializer):
+    """
+    任务书序列化类
+    """
+    class Meta:
+        model = TaskBook
+        fields = '__all__'
