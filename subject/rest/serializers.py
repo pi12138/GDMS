@@ -80,3 +80,32 @@ class ApplySubjectSerializer(serializers.ModelSerializer):
         }
 
 
+class SubjectInfoSerializer(serializers.ModelSerializer):
+    select_student = serializers.SerializerMethodField(method_name='get_student', read_only=True)
+    task_book = serializers.SerializerMethodField(method_name='get_task_book')
+
+    def get_student(self, obj):
+        if obj.select_student is None:
+            return ""
+        else:
+            stu = obj.select_student
+            info = {
+                'name': stu.name,
+                'qq': stu.qq,
+                'phone': stu.phone
+            }
+            return info
+
+    def get_task_book(self, obj):
+        if hasattr(obj, 'task_book'):
+            return obj.task_book.id
+        else:
+            return None
+
+    class Meta:
+        model = Subject
+        fields = "__all__"
+        extra_kwargs = {
+            'declare_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
+            'review_time': {'format': '%Y-%m-%d %H:%M:%S', 'read_only': True}
+        }

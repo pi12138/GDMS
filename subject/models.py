@@ -66,7 +66,7 @@ class TaskBook(models.Model):
         (2, '不合格')
     )
 
-    subject = models.OneToOneField(Subject, verbose_name="所属课题",on_delete=models.CASCADE)
+    subject = models.OneToOneField(Subject, verbose_name="所属课题", on_delete=models.CASCADE, related_name='task_book')
     release_time = models.DateTimeField(verbose_name="任务书下达时间")
     subject_desc = models.TextField(verbose_name="课题简述")
     purpose_and_significance = models.TextField(verbose_name="研究的目的意义")

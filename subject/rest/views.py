@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ViewSet
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 import datetime
 
@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 
 from subject.models import Subject, ApplySubject
-from .serializers import SubjectSerializer, ApplySubjectSerializer
+from .serializers import SubjectSerializer, ApplySubjectSerializer, SubjectInfoSerializer
 
 
 class PendingSubjectViewSet(ViewSet):
@@ -224,3 +224,34 @@ class ApprovalApplicationViewSet(ViewSet):
             app.subject.save()
         ser.save()
         return Response(ser.data)
+
+
+class SubjectViewSet(ViewSet):
+    """
+    通用功能
+    """
+
+    @action(detail=False)
+    def selected_subject(self, request):
+        """
+        已经被选择的课题列表
+        教师功能: 毕业设计过程---使用
+        """
+        query_set = Subject.objects.filter(review_result=1, select_student__isnull=False)
+        ser = SubjectInfoSerializer(instance=query_set, many=True)
+        res_data = PendingSubjectViewSet.pagination(ser.data, request)
+        return Response(res_data)
+
+
+class TaskBookViewSet(ViewSet):
+    """
+    通用功能:
+        - 教师: 填写 + 查看 + 修改
+        - 管理员: 审核
+        - 学生: 查看
+    """
+    def retrieve(self, request, pk=None):
+        pass
+
+    def create(self, request):
+        data = request.data
