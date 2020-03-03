@@ -40,7 +40,8 @@ var app = new Vue({
             axios.post(url, this.$data)
                 .then(function (res) {
                     alert(res.data)
-                    window.location.href = '/subject/declare_subject/'
+                    // window.location.href = '/subject/declare_subject/'
+                    location.reload()
                 })
                 .catch(function (error) {
                     // console.log(error.response)

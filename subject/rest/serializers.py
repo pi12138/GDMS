@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from subject.models import Subject, ApplySubject
+from user.models import Student
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -49,7 +50,33 @@ class SubjectSerializer(serializers.ModelSerializer):
         }
 
 
+class SubjectInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ('id', 'subject_name', 'number_of_people')
+
+
 class ApplySubjectSerializer(serializers.ModelSerializer):
+    subject_info = SubjectInfoSerializer(source='subject', read_only=True)
+    student_info = serializers.SerializerMethodField(method_name='get_student_info', read_only=True)
+
+    def get_student_info(self, obj):
+        if obj.student is None:
+            return ""
+        else:
+            stu = obj.student
+            info = {
+                'name': stu.name,
+                'qq': stu.qq,
+                'phone': stu.phone
+            }
+            return info
+
     class Meta:
         model = ApplySubject
         fields = "__all__"
+        extra_kwargs = {
+            'apply_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
+        }
+
+

@@ -104,6 +104,7 @@ class AlterSubject(LoginRequiredMixin, View):
         if data['review_result_number'] == 2:
             data['review_result_number'] = 0
             data['review_reason'] = ""
+            data['reviewer'] = None
 
         query_set = Subject.objects.filter(id=subject_id)
         if not query_set.exists():
@@ -145,3 +146,11 @@ class SelectSubject(LoginRequiredMixin, View):
     """
     def get(self, request):
         return render(request, 'select_subject.html')
+
+
+class ApprovalApplication(LoginRequiredMixin, View):
+    """
+    老师功能： 审批学生的选题申请
+    """
+    def get(self, request):
+        return render(request, 'approval_application.html')
