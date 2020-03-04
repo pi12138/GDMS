@@ -133,10 +133,11 @@ const taskBookForm = new Vue({
             const url = `http://127.0.0.1:8000/api/subject/task_book/${taskId}/`
             axios.get(url)
                 .then(res => {
-                    const data = res.data
+                    const data = res.data.data
+                    console.log(data)
 
-                    this.subject = data.subject
-                    this.releaseTime = data.releaseTime
+                    this.subject = data.subject.id
+                    this.releaseTime = data.release_time
                     this.subjectDesc = data.subject_desc
                     this.purposeAndSignificance = data.purpose_and_significance
                     this.contentAndTechnology = data.content_and_technology
@@ -144,12 +145,15 @@ const taskBookForm = new Vue({
                     this.schedule = data.schedule
                     this.references = data.references
                     this.informationInEnglish = data.information_in_English
-                    this.reviewer = data.reviewer
                     this.reviewTime = data.review_time
                     this.reviewResult = data.review_result
 
-                    this.subjectName = data.subjectName
-                    this.reviewerName = data.reviewerName
+                    this.subjectName = data.subject.name
+
+                    if (data.reviewer != null){
+                        this.reviewer = data.reviewer.id
+                        this.reviewerName = data.reviewer.name
+                    }
 
                     return true
                 })
@@ -192,6 +196,20 @@ const taskBookForm = new Vue({
                     alert("Error")
                     return false
                 })
+        }
+    },
+
+    filters: {
+        handleReviewResult(val){
+            if (val == 0){
+                return "待审核"
+            }else if(val == 1){
+                return "合格"
+            }else if(val == 2){
+                return "不合格"
+            }else{
+                return ""
+            }
         }
     }
 })

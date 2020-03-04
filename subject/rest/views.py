@@ -6,7 +6,7 @@ import datetime
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from subject.models import Subject, ApplySubject
+from subject.models import Subject, ApplySubject, TaskBook
 from .serializers import SubjectSerializer, ApplySubjectSerializer, SubjectInfoSerializer, TaskBookSerializer
 
 
@@ -251,7 +251,16 @@ class TaskBookViewSet(ViewSet):
         - 学生: 查看
     """
     def retrieve(self, request, pk=None):
-        pass
+        if not pk:
+            return Response({'msg': "请传入任务书参数"}, status=400)
+
+        query_set = TaskBook.objects.filter(pk=pk)
+        if not query_set.exists():
+            return Response({'msg': "该任务书不存在"}, status=400)
+
+        ser = TaskBookSerializer(instance=query_set[0])
+
+        return Response({'data': ser.data, 'msg': '获取任务书成功'})
 
     def create(self, request):
         data = request.data

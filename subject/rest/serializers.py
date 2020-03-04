@@ -115,6 +115,32 @@ class TaskBookSerializer(serializers.ModelSerializer):
     """
     任务书序列化类
     """
+    subject = serializers.SerializerMethodField(method_name='get_subject')
+    reviewer = serializers.SerializerMethodField(method_name='get_reviewer')
+
+    def get_subject(self, obj):
+        if obj.subject:
+            return {
+                'id': obj.subject.id,
+                'name': obj.subject.subject_name
+            }
+        else:
+            return None
+
+    def get_reviewer(self, obj):
+        if not obj.reviewer:
+            return None
+        else:
+            return {
+                'id': obj.reviewer.id,
+                'name': obj.reviewer.name
+            }
+
+
     class Meta:
         model = TaskBook
         fields = '__all__'
+        extra_kwargs = {
+            'release_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
+            'review_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True}
+        }
