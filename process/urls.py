@@ -1,9 +1,10 @@
 from django.conf.urls import url
 
-from .views import TeacherProcess
+from .views import TeacherProcess, AdminProcess
 
 
 urlpatterns = [
     # url(r'^student_settings/$', StudentUserSettingsView.as_view(), name='student-settings'),
     url(r'^teacher/$', TeacherProcess.as_view(), name='teacher'),
+    url(r'^admin/$', AdminProcess.as_view(), name='admin'),
 ]

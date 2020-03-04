@@ -10,3 +10,11 @@ class TeacherProcess(LoginRequiredMixin, View):
     """
     def get(self, request):
         return render(request, 'teacher_process.html')
+
+
+class AdminProcess(LoginRequiredMixin, View):
+    """
+    管理员功能：毕业设计过程界面
+    """
+    def get(self, request):
+        return render(request, 'admin_process.html')
