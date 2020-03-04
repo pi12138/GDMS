@@ -21,14 +21,17 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('', include(('login.urls', 'login'), namespace='login')),
     path("user/", include(('user.urls', 'user'), namespace="user")),
     path("organization/", include(("organization.urls", "organization"), namespace="organization")),
     path("subject/", include(("subject.urls", "subject"), namespace="subject")),
+    path('process/', include(('process.urls', 'process'), namespace='process')),
     # url(r'^login/', obtain_jwt_token),
 
     path('import_data/', include(('import_data.urls', 'import_data'), namespace='import_data')),
 
+    # api
     # path('api/login/', include(('login.rest.urls', 'login'), namespace='api-login')),
     path('api/subject/', include(('subject.rest.urls', 'subject'), namespace='api-subject')),
     path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),

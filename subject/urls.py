@@ -1,8 +1,7 @@
 from django.conf.urls import url
 
 from .views import DeclareSubject, AlterSubject, ApprovalSubject, PassedSubject, \
-    SelectSubject, ApprovalApplication, TeacherProcess
-
+    SelectSubject, ApprovalApplication
 
 urlpatterns = [
     # url(r'^student_settings/$', StudentUserSettingsView.as_view(), name='student-settings'),
@@ -12,5 +11,4 @@ urlpatterns = [
     url(r'^passed_subject/$', PassedSubject.as_view(), name='passed-subject'),
     url(r'^select_subject/$', SelectSubject.as_view(), name='select-subject'),
     url(r'^approval_application/$', ApprovalApplication.as_view(), name='approval-application'),
-    url(r'^teacher_process/$', TeacherProcess.as_view(), name='teacher-process')
 ]

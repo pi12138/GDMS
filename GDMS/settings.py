@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'login',
     'import_data',
     'subject',
+    'process',
 ]
 
 MIDDLEWARE = [
