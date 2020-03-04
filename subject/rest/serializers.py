@@ -82,7 +82,9 @@ class ApplySubjectSerializer(serializers.ModelSerializer):
 
 class SubjectInfoSerializer(serializers.ModelSerializer):
     select_student = serializers.SerializerMethodField(method_name='get_student', read_only=True)
-    task_book = serializers.SerializerMethodField(method_name='get_task_book')
+    task_book = serializers.SerializerMethodField(method_name='get_task_book', read_only=True)
+    task_book_status = serializers.SerializerMethodField(method_name='get_task_book_status', read_only=True)
+    questioner_info = serializers.SerializerMethodField(method_name='get_questioner', read_only=True)
 
     def get_student(self, obj):
         if obj.select_student is None:
@@ -101,6 +103,18 @@ class SubjectInfoSerializer(serializers.ModelSerializer):
             return obj.task_book.id
         else:
             return None
+
+    def get_questioner(self, obj):
+        if obj.questioner:
+            return {
+                'name': obj.questioner.name
+            }
+        return None
+
+    def get_task_book_status(self, obj):
+        if hasattr(obj, 'task_book'):
+            return obj.task_book.review_result
+        return None
 
     class Meta:
         model = Subject
@@ -134,11 +148,10 @@ class TaskBookSerializer(serializers.ModelSerializer):
                 'name': obj.reviewer.name
             }
 
-
     class Meta:
         model = TaskBook
         fields = '__all__'
         extra_kwargs = {
-            'release_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True},
-            'review_time': {'format': "%Y-%m-%d %H:%M:%S", 'read_only': True}
+            'release_time': {'format': "%Y-%m-%d %H:%M:%S"},
+            'review_time': {'format': "%Y-%m-%d %H:%M:%S"}
         }

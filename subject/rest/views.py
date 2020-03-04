@@ -307,7 +307,11 @@ class TaskBookViewSet(ViewSet):
         if not query_set.exists():
             return Response({'msg': "该任务书不存在"}, status=400)
 
-        ser = TaskBookSerializer(instance=query_set[0], data=request.data, partial=True)
+        data = request.data
+        data['reviewer'] = request.user.administrator.id
+        data['review_time'] = datetime.datetime.now()
+
+        ser = TaskBookSerializer(instance=query_set[0], data=data, partial=True)
         if not ser.is_valid():
             return Response({'msg': "数据不合法", 'error': ser.errors}, status=400)
 
