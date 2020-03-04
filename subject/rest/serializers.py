@@ -115,13 +115,12 @@ class TaskBookSerializer(serializers.ModelSerializer):
     """
     任务书序列化类
     """
-    subject = serializers.SerializerMethodField(method_name='get_subject')
-    reviewer = serializers.SerializerMethodField(method_name='get_reviewer')
+    subject_info = serializers.SerializerMethodField(method_name='get_subject', read_only=True)
+    reviewer_info = serializers.SerializerMethodField(method_name='get_reviewer', read_only=True)
 
     def get_subject(self, obj):
         if obj.subject:
             return {
-                'id': obj.subject.id,
                 'name': obj.subject.subject_name
             }
         else:
@@ -132,7 +131,6 @@ class TaskBookSerializer(serializers.ModelSerializer):
             return None
         else:
             return {
-                'id': obj.reviewer.id,
                 'name': obj.reviewer.name
             }
 

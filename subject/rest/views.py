@@ -272,3 +272,44 @@ class TaskBookViewSet(ViewSet):
 
         ser.save()
         return Response({'data': ser.data, 'msg': "ok"})
+
+    def update(self, request, pk=None):
+        """
+        教师功能： 修改任务书（整体修改)
+        """
+        if not pk:
+            return Response({"msg": "未传入任务书参数"}, status=400)
+
+        query_set = TaskBook.objects.filter(pk=pk)
+        if not query_set.exists():
+            return Response({'msg': "该任务书不存在"}, status=400)
+
+        data = request.data
+        data['reviewer'] = None
+        data['review_result'] = 0
+        data['review_time'] = None
+
+        ser = TaskBookSerializer(instance=query_set[0], data=data)
+        if not ser.is_valid():
+            return Response({'msg': "数据不合法", 'error': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data, 'msg': "修改任务书成功"})
+
+    def partial_update(self, request, pk=None):
+        """
+        管理员功能： 部分修改任务书（即，填写reviewer, review_result, review_time）
+        """
+        if not pk:
+            return Response({"msg": "未传入任务书参数"}, status=400)
+
+        query_set = TaskBook.objects.filter(pk=pk)
+        if not query_set.exists():
+            return Response({'msg': "该任务书不存在"}, status=400)
+
+        ser = TaskBookSerializer(instance=query_set[0], data=request.data, partial=True)
+        if not ser.is_valid():
+            return Response({'msg': "数据不合法", 'error': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data, 'msg': "审核任务书成功"})
