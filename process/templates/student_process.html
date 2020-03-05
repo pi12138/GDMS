@@ -63,7 +63,7 @@
                 <img src="/static/images/箭头1.png" alt="" class="image">
             </div>
 
-            <div class="image_container" @click="viewOrWrite">
+            <div class="image_container" @click="viewOrWriteReport">
                 <img src="/static/images/report.png" alt="开题报告" class="image">
                 <h5 class="">开题报告</h5>
             </div>
@@ -217,6 +217,83 @@
     </div>
 
 
+    <!-- 开题报告遮罩层 -->
+    <div class="container" id="reportForm">
+        <form action="" class="form">
+            <div class="row">
+                <div class="col-md-8 form-group">
+                    <label for="">课题名称</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="">提交时间</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="">研究现状综述</label>
+                    <textarea cols="30" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="">可行性分析</label>
+                    <textarea cols="30" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="">重点/关键问题及解决思路</label>
+                    <textarea cols="30" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="">课题工作条件</label>
+                    <textarea cols="30" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="">工作方案及进度安排</label>
+                    <textarea cols="30" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="">指导老师</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="">审阅时间</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="">审核意见</label>
+                    <select class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="">审阅意见</label>
+                    <textarea cols="30" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                div.
+            </div>
+
+        </form>
+    </div>
 
 
     <script src="/static/js/vue.js"></script>

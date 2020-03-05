@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'import_data',
     'subject',
     'process',
+    'report',
 ]
 
 MIDDLEWARE = [
