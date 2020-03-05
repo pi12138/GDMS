@@ -1,8 +1,10 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from user.rest.serializers import TeacherSettingsSerializer
 from user.models import Teacher
+from subject.models import TaskBook
 
 
 class TeacherSettingsViewSet(ViewSet):
@@ -32,3 +34,32 @@ class TeacherSettingsViewSet(ViewSet):
         ser.save()
 
         return Response(ser.data)
+
+
+class StudentInfoViewSet(ViewSet):
+    """
+    学生功能： 学生信息
+    """
+
+    @action(detail=False)
+    def related_info(self, request):
+        """
+        与学生相关的一些信息： 课题， 任务书
+        """
+        user = request.user.student
+
+        subject = None
+        task_book = None
+        if hasattr(user, 'select_student'):
+            subject = user.select_student
+
+        if subject:
+            query_set = TaskBook.objects.filter(subject_id=subject.id, review_result=1)
+            task_book = query_set[0] if query_set.exists() else None
+
+        res = {
+            'subject_id': subject.id,
+            'task_book_id': task_book.id
+        }
+
+        return Response(res)
