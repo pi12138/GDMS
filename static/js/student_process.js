@@ -4,7 +4,9 @@ const process = new Vue({
     el: "#process",
     data: {
         'subject': "",
-        'taskBook': ""
+        'taskBook': "",
+        'report': "",
+        'subjectName': ""
     },
     methods: {
         viewTaskBook(){
@@ -13,6 +15,10 @@ const process = new Vue({
             }else{
                 alert("不存在任务书")
             }
+        },
+
+        viewOrWriteReport(){
+            reportForm.showReportForm(this.report, this.subjectName)
         },
 
         getInfo(){
@@ -27,6 +33,8 @@ const process = new Vue({
 
                     this.subject = data.subject_id
                     this.taskBook = data.task_book_id
+                    this.report = data.report_id
+                    this.subjectName = data.subject_name
                 })
                 .catch(err => {
                     handleError(err)

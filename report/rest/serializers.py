@@ -4,6 +4,8 @@ from report.models import Report
 
 
 class ReportSerializer(serializers.ModelSerializer):
+    subject_name = serializers.CharField(source='subject.subject_name', read_only=True)
+
     class Meta:
         model = Report
         fields = "__all__"
