@@ -27,7 +27,7 @@ const reportForm = new Vue({
         },
 
         getReportData(reportId){
-            const url = 'http://127.0.0.1:8000/api/report' + reportId + '/'
+            const url = 'http://127.0.0.1:8000/api/report/' + reportId + '/'
 
             axios.get(url)
                 .then(res => {
@@ -36,7 +36,7 @@ const reportForm = new Vue({
 
                     this.subject = data.subject
                     this.subjectName = data.subject_name
-                    this.submitTime = data.subject_time
+                    this.submitTime = data.submit_time
                     this.researchStatus = data.research_status
                     this.feasibilityAnalysis = data.feasibility_analysis
                     this.problemsAndSolutions = data.problems_and_solutions

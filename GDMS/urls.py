@@ -35,5 +35,5 @@ urlpatterns = [
     # path('api/login/', include(('login.rest.urls', 'login'), namespace='api-login')),
     path('api/subject/', include(('subject.rest.urls', 'subject'), namespace='api-subject')),
     path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),
-    path('api/report', include(('report.rest.urls', 'report'), namespace='api-report')),
+    path('api/report/', include(('report.rest.urls', 'report'), namespace='api-report')),
 ]
