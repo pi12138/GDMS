@@ -55,6 +55,7 @@ const reportForm = new Vue({
                     this.reviewTime = data.review_time
                     this.reviewResult = data.review_result
                     this.report = data.id
+                    this.teacherName = data.teacher_name
                 })
                 .catch(err => {
                     handleError(err)
@@ -126,17 +127,20 @@ const reportForm = new Vue({
 
         reviewReportData(reportId){
             /* 教师功能： 审核开题报告 */
+
             const url = `http://127.0.0.1:8000/api/report/${reportId}/`
             const headers = this.getHeaders()
             const data = {
                 review_option: this.reviewOption,
-                review_result: this.reviewResult
+                review_result: this.reviewResult,
+                subject: this.subject
             }
 
             axios.patch(url, data, {headers: headers})
                 .then(res => {
                     console.log(res.data.data)
                     alert("审核成功")
+                    location.reload()
                 })
                 .catch(err => {
                     handleError(err)

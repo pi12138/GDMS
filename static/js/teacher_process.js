@@ -91,7 +91,7 @@ const subjectList = new Vue({
             }
         },
 
-        reivewOrViewReport(index){
+        reviewOrViewReport(index){
             const reportId = this.subjectList[index].report.id
             const subjectName = this.subjectList[index].subject_name
             reportForm.showReportForm(reportId, subjectName)
