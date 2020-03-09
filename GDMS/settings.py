@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'subject',
     'process',
     'report',
+    'design',
 ]
 
 MIDDLEWARE = [
