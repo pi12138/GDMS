@@ -87,6 +87,25 @@ const subjectList = new Vue({
 
             taskBookForm.showTaskBook(taskId)
         },
+
+        handleReport(report){
+            /* 处理 开题报告 字段 */
+            if (report == null){
+                return `<span>未填写</span>`
+            }
+
+            if (report.review_result == 0){
+                return `<a href="#">待审核</a>`
+            }else if (report.review_result == 1 || report.review_result == 2 ){
+                return `<a href="#">查看</a>`
+            }
+        },
+
+        reviewOrViewReport(index){
+            const reportId = this.subjectList[index].report.id
+            const subjectName = this.subjectList[index].subject_name
+            reportForm.showReportForm(reportId, subjectName)
+        }
     },
 
     beforeMount() {
