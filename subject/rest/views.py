@@ -237,7 +237,8 @@ class SubjectViewSet(ViewSet):
         已经被选择的课题列表
         教师功能: 毕业设计过程---使用
         """
-        query_set = Subject.objects.filter(review_result=1, select_student__isnull=False)
+        teacher = request.user.teacher
+        query_set = Subject.objects.filter(review_result=1, select_student__isnull=False, questioner_id=teacher.id)
         ser = SubjectInfoSerializer(instance=query_set, many=True)
         res_data = PendingSubjectViewSet.pagination(ser.data, request)
         return Response(res_data)
