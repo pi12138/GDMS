@@ -96,9 +96,15 @@ class GraduationDesignViewSet(ViewSet):
 
 class GraduationThesisViewSet(ViewSet):
     """
-
+    通用功能: 毕业论文
+        - 学生: 上传 + 下载 + 修改
+        - 教师: 审核 + 下载
+        - 管理员: 查看
     """
     def create(self, request):
+        """
+        学生功能: 上传毕业论文
+        """
         query_dict = request.data
         data = dict()
         data['thesis'] = query_dict.get('file')
@@ -115,6 +121,9 @@ class GraduationThesisViewSet(ViewSet):
         return Response({'data': ser.data})
 
     def retrieve(self, request, pk=None):
+        """
+        通用功能: 查看毕业设计
+        """
         ret = self.handle_pk(pk)
         if ret == dict:
             return Response(ret, status=400)
@@ -124,6 +133,9 @@ class GraduationThesisViewSet(ViewSet):
         return Response({"data": ser.data})
 
     def update(self, request, pk=None):
+        """
+        学生功能: 修改毕业论文
+        """
         ret = self.handle_pk(pk)
         if ret == dict:
             return Response(ret, status=400)
@@ -144,6 +156,9 @@ class GraduationThesisViewSet(ViewSet):
         return Response({'data': ser.data})
 
     def partial_update(self, request, pk=None):
+        """
+        教师功能: 审核毕业设计
+        """
         ret = self.handle_pk(pk)
         if ret == dict:
             return Response(ret, status=400)
