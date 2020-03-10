@@ -101,7 +101,7 @@ class GraduationThesisViewSet(ViewSet):
     def create(self, request):
         query_dict = request.data
         data = dict()
-        data['thsis'] = query_dict.get('file')
+        data['thesis'] = query_dict.get('file')
         data['key_words'] = query_dict.get('key_words')
         data['summary'] = query_dict.get('summary')
         data['subject'] = request.user.student.select_student.id
@@ -115,10 +115,56 @@ class GraduationThesisViewSet(ViewSet):
         return Response({'data': ser.data})
 
     def retrieve(self, request, pk=None):
-        pass
+        ret = self.handle_pk(pk)
+        if ret == dict:
+            return Response(ret, status=400)
+
+        ser = GraduationThesisSerializer(instance=ret)
+
+        return Response({"data": ser.data})
 
     def update(self, request, pk=None):
-        pass
+        ret = self.handle_pk(pk)
+        if ret == dict:
+            return Response(ret, status=400)
+
+        query_dict = request.data
+        data = dict()
+        data['thesis'] = query_dict.get('file')
+        data['key_words'] = query_dict.get('key_words')
+        data['summary'] = query_dict.get('summary')
+        data['subject'] = request.user.student.select_student.id
+        data['upload_time'] = datetime.datetime.now()
+
+        ser = GraduationThesisSerializer(instance=ret, data=data)
+        if not ser.is_valid():
+            return Response({'msg': "更新毕业论文失败"}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data})
 
     def partial_update(self, request, pk=None):
-        pass
+        ret = self.handle_pk(pk)
+        if ret == dict:
+            return Response(ret, status=400)
+
+        data = request.data
+        data['review_time'] = datetime.datetime.now()
+
+        ser = GraduationThesisSerializer(instance=ret, data=data)
+        if not ser.is_valid():
+            return Response({'msg': "审核毕业论文失败"}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data})
+
+
+def handle_pk(self, pk):
+        if not pk:
+            return {'msg': "未传入毕业论文参数"}
+
+        query_set = GraduationDesign.objects.filter(pk=pk)
+        if not query_set.exists():
+            return {'msg': "毕业沦为不存在"}
+
+        return query_set[0]
