@@ -74,7 +74,7 @@ class StudentInfoViewSet(ViewSet):
             'subject_name': subject.subject_name if subject else None,
             'task_book_id': task_book.id if task_book else None,
             'report_id': report.id if report else None,
-            'design_id': design.id if report else None,
+            'design_id': design.id if design else None,
         }
 
         return Response(res)
