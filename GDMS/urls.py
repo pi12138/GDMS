@@ -36,4 +36,5 @@ urlpatterns = [
     path('api/subject/', include(('subject.rest.urls', 'subject'), namespace='api-subject')),
     path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),
     path('api/report/', include(('report.rest.urls', 'report'), namespace='api-report')),
+    path('api/design/', include(('design.rest.urls', 'design'), namespace='api-design')),
 ]
