@@ -6,7 +6,8 @@ const process = new Vue({
         'subject': "",
         'taskBook': "",
         'report': "",
-        'subjectName': ""
+        'subjectName': "",
+        design: "",
     },
     methods: {
         viewTaskBook(){
@@ -19,6 +20,10 @@ const process = new Vue({
 
         viewOrWriteReport(){
             reportForm.showReportForm(this.report, this.subjectName)
+        },
+
+        viewOrWriteDesign(){
+            designForm.showDesignForm(this.design, this.subjectName)
         },
 
         getInfo(){
@@ -35,6 +40,7 @@ const process = new Vue({
                     this.taskBook = data.task_book_id
                     this.report = data.report_id
                     this.subjectName = data.subject_name
+                    this.design = data.design_id
                 })
                 .catch(err => {
                     handleError(err)
