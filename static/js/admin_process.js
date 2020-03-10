@@ -105,6 +105,26 @@ const subjectList = new Vue({
             const reportId = this.subjectList[index].report.id
             const subjectName = this.subjectList[index].subject_name
             reportForm.showReportForm(reportId, subjectName)
+        },
+
+        handleDesign(design){
+            /* 处理毕业设计字段 */
+            if (design == null){
+                return `<span>未填写</span>`
+            }
+
+            if (design.review_option){
+                return `<a href="#">查看</a>`
+            }else{
+                return `<a href="#">审阅</a>`
+            }
+        },
+
+        reviewOrViewDesign(index){
+            /* 审核或者查看毕业设计 */
+            let designId = this.subjectList[index].design.id
+            let subjectName = this.subjectList[index].subject_name
+            designForm.showDesignForm(designId, subjectName)
         }
     },
 

@@ -69,7 +69,19 @@ class GraduationDesignViewSet(ViewSet):
         """
         教师功能：审阅毕业设计
         """
-        pass
+        ret = self.handle_pk(pk)
+        if ret == dict:
+            return Response(ret, status=400)
+
+        data = request.data
+        data['review_time'] = datetime.datetime.now()
+
+        ser = GraduationDesignSerializer(instance=ret, data=data)
+        if not ser.is_valid():
+            return Response({"msg": "审核毕业设计失败", 'error': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data})
 
     def handle_pk(self, pk):
         if not pk:

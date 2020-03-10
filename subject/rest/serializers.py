@@ -86,6 +86,7 @@ class SubjectInfoSerializer(serializers.ModelSerializer):
     task_book_status = serializers.SerializerMethodField(method_name='get_task_book_status', read_only=True)
     questioner_info = serializers.SerializerMethodField(method_name='get_questioner', read_only=True)
     report = serializers.SerializerMethodField(method_name='get_report', read_only=True)
+    design = serializers.SerializerMethodField(method_name='get_design', read_only=True)
 
     def get_student(self, obj):
         if obj.select_student is None:
@@ -125,6 +126,16 @@ class SubjectInfoSerializer(serializers.ModelSerializer):
             }
             return report
 
+        return None
+
+    def get_design(self, obj):
+        if hasattr(obj, 'graduationdesign'):
+            design = {
+                'id': obj.graduationdesign.id,
+                'review_option': obj.graduationdesign.review_option,
+                'review_time': obj.graduationdesign.review_time
+            }
+            return design
         return None
 
     class Meta:

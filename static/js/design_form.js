@@ -146,8 +146,27 @@ let designForm = new Vue({
 
         downloadFile(){
             window.open(this.downloadFileUrl)
-        }
+        },
 
+        reviewDesignData(){
+            const url = 'http://127.0.0.1:8000/api/design/design/' + this.design + '/'
+            let headers = getHeaders()
+            let data = {
+                review_option: this.reviewOption,
+                review_option: this.reviewOption,
+                subject: this.subject
+            }
+
+            axios.patch(url, data, {headers: headers})
+                .then(res => {
+                    console.log(res.data.data)
+                    alert("审核成功")
+                    location.reload()
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        }
     },
     computed: {
         fileInfo: function(){
