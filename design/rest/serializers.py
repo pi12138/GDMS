@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from design.models import GraduationDesign
+from design.models import GraduationDesign, GraduationThesis
 
 
 class GraduationDesignSerializer(serializers.ModelSerializer):
@@ -22,3 +22,12 @@ class GraduationDesignSerializer(serializers.ModelSerializer):
             'review_time': {'format': "%Y-%m-%d %H:%M:%S"},
         }
 
+
+class GraduationThesisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GraduationThesis
+        fields = "__all__"
+        extra_kwargs = {
+            'upload_time': {'format': "%Y-%m-%d %H:%M:%S"},
+            'review_time': {'format': "%Y-%m-%d %H:%M:%S"},
+        }

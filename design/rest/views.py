@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 
-from design.rest.serializers import GraduationDesignSerializer
+from design.rest.serializers import GraduationDesignSerializer, GraduationThesisSerializer
 from design.models import GraduationDesign
 
 import datetime
@@ -92,3 +92,33 @@ class GraduationDesignViewSet(ViewSet):
             return {'msg': "毕业设计不存在"}
 
         return query_set[0]
+
+
+class GraduationThesisViewSet(ViewSet):
+    """
+
+    """
+    def create(self, request):
+        query_dict = request.data
+        data = dict()
+        data['thsis'] = query_dict.get('file')
+        data['key_words'] = query_dict.get('key_words')
+        data['summary'] = query_dict.get('summary')
+        data['subject'] = request.user.student.select_student.id
+        data['upload_time'] = datetime.datetime.now()
+
+        ser = GraduationThesisSerializer(data=data)
+        if not ser.is_valid():
+            return Response({"msg": "创建毕业论文失败", 'error': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data})
+
+    def retrieve(self, request, pk=None):
+        pass
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
