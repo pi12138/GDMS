@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from django.views.static import serve
+from django.conf import settings
 
 # from rest_framework_jwt.views import obtain_jwt_token
 
@@ -37,4 +39,7 @@ urlpatterns = [
     path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),
     path('api/report/', include(('report.rest.urls', 'report'), namespace='api-report')),
     path('api/design/', include(('design.rest.urls', 'design'), namespace='api-design')),
+
+    # 为了访问上传的媒体文件
+    url(r'media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

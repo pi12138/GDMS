@@ -19,8 +19,11 @@ class GraduationDesignViewSet(ViewSet):
         """
         学生功能： 上传毕业设计
         """
-        data = request.data
+        query_dict = request.data
+        data = dict()
+        data['design'] = query_dict.get('file')
         data['upload_time'] = datetime.datetime.now()
+        data['subject'] = request.user.student.select_student.id
 
         ser = GraduationDesignSerializer(data=data)
         if not ser.is_valid():
@@ -45,7 +48,22 @@ class GraduationDesignViewSet(ViewSet):
         """
         学生功能：修改毕业设计
         """
-        pass
+        ret = self.handle_pk(pk)
+        if ret == dict:
+            return Response(ret, status=400)
+
+        query_dict = request.data
+        data = dict()
+        data['design'] = query_dict.get('file')
+        data['upload_time'] = datetime.datetime.now()
+        data['subject'] = request.user.student.select_student.id
+        ser = GraduationDesignSerializer(instance=ret, data=data)
+
+        if not ser.is_valid():
+            return Response({"msg": "修改毕业设计失败", 'error': ser.errors}, status=400)
+
+        ser.save()
+        return Response({'data': ser.data})
 
     def partial_update(self, request, pk=None):
         """

@@ -12,3 +12,5 @@ db.sqlite3
 
 local_settings.py
 **/data/*.xls
+
+/media/**
