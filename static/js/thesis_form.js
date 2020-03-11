@@ -31,3 +31,110 @@ function getHeaders() {
 
     return headers
 }
+
+
+let thesisForm = new Vue({
+    el: "#thesisForm",
+    data: {
+        subject: "",
+        subjectName: "",
+        keyWords: "",
+        summary: "",
+        thesisId: "",
+        uploadTime: "",
+        reviewOption: "",
+        reviewTime: "",
+
+        file: "",
+        filename: "",
+        downloadFileUrl: ""
+    },
+    methods: {
+
+        createThesisForm(){
+            /* 创建毕业论文 */
+            const url = 'http://127.0.0.1:8000/api/design/thesis/'
+            let headers = getHeaders()
+            headers['Content-Type'] = 'multipart/form-data'
+            let formData = new FormData()
+            formData.append('file', this.file)
+            formData.append('keyWords', this.keyWords)
+            formData.append('summary', this.summary)
+
+            axios.post(url, formData, {headers: headers})
+                .then(res => {
+                    console.log(res.data.data)
+                    alert("提交成功")
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        alterThesisForm(){
+            /* 修改毕业论文 */
+            const url = 'http://127.0.0.1:8000/api/design/thesis/' + this.thesisId + '/'
+            let headers = getHeaders()
+            headers['Content-Type'] = 'multipart/form-data'
+            let formData = new FormData()
+            formData.append('file', this.file)
+            formData.append('keyWords', this.keyWords)
+            formData.append('summary', this.summary)
+
+            axios.put(url, formData, {headers:headers})
+                .then(res => {
+                    console.log(res.data.data)
+                    alert("修改成功")
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        getThesisForm(){
+            const url = 'http://127.0.0.1:8000/api/design/thesis/' + this.thesisId + '/'
+            axios.get(url)
+                .then(res => {
+                    let data = res.data.data
+                    console.log(data)
+
+                    this.subject = data.subject
+                    this.subjectName = data.subject_name
+                    this.keyWords = data.key_words
+                    this.summary = data.summary
+                    this.thesisId = data.id
+                    this.uploadTime = data.upload_time
+                    this.reviewOption = data.review_option
+                    this.reviewTime = data.review_time
+                    this.filename = data.filename
+                    this.downloadFileUrl = data.thesis
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        reviewThesisForm(){
+            /* 审核毕业设计论文 */
+            const url = 'http://127.0.0.1:8000/api/design/thesis/' + this.thesisId + '/'
+            let headers = getHeaders()
+            let data = {
+                review_option: this.reviewOption,
+            }
+
+            axios.patch(url, data, {headers: headers})
+                .then(res => {
+                    console.log(res.data.data)
+                    alert("审核成功")
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+
+        },
+
+        downloadFile(){
+            window.open(this.downloadFileUrl)
+        }
+    }
+})
