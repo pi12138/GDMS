@@ -24,6 +24,12 @@ class GraduationDesignSerializer(serializers.ModelSerializer):
 
 
 class GraduationThesisSerializer(serializers.ModelSerializer):
+    subject_name = serializers.CharField(source='subject.subject_name', read_only=True)
+    filename = serializers.SerializerMethodField(method_name='get_filename', read_only=True)
+
+    def get_filename(self, obj):
+        return obj.thesis.name.split('/')[-1] if obj.thesis else None
+
     class Meta:
         model = GraduationThesis
         fields = "__all__"

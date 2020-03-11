@@ -50,6 +50,28 @@ let thesisForm = new Vue({
         downloadFileUrl: ""
     },
     methods: {
+        showThesisForm(thesisId, subjectName){
+            if (thesisId){
+                this.getThesisForm(thesisId)
+            }else{
+                this.thesisId = thesisId
+                this.subjectName = subjectName
+            }
+
+            this.$refs.thesisForm.classList.remove('hidden')
+        },
+
+        hiddenThesisForm(){
+            this.$refs.thesisForm.classList.add('hidden')
+        },
+
+        submitThesisForm(){
+            if (this.thesisId){
+                this.alterThesisForm()
+            }else{
+                this.createThesisForm()
+            }
+        },
 
         createThesisForm(){
             /* 创建毕业论文 */
@@ -58,7 +80,7 @@ let thesisForm = new Vue({
             headers['Content-Type'] = 'multipart/form-data'
             let formData = new FormData()
             formData.append('file', this.file)
-            formData.append('keyWords', this.keyWords)
+            formData.append('words', this.keyWords)
             formData.append('summary', this.summary)
 
             axios.post(url, formData, {headers: headers})
@@ -78,7 +100,7 @@ let thesisForm = new Vue({
             headers['Content-Type'] = 'multipart/form-data'
             let formData = new FormData()
             formData.append('file', this.file)
-            formData.append('keyWords', this.keyWords)
+            formData.append('words', this.keyWords)
             formData.append('summary', this.summary)
 
             axios.put(url, formData, {headers:headers})
@@ -91,8 +113,8 @@ let thesisForm = new Vue({
                 })
         },
 
-        getThesisForm(){
-            const url = 'http://127.0.0.1:8000/api/design/thesis/' + this.thesisId + '/'
+        getThesisForm(thesisId){
+            const url = 'http://127.0.0.1:8000/api/design/thesis/' + thesisId + '/'
             axios.get(url)
                 .then(res => {
                     let data = res.data.data
@@ -100,7 +122,7 @@ let thesisForm = new Vue({
 
                     this.subject = data.subject
                     this.subjectName = data.subject_name
-                    this.keyWords = data.key_words
+                    this.keyWords = data.words
                     this.summary = data.summary
                     this.thesisId = data.id
                     this.uploadTime = data.upload_time
@@ -120,6 +142,8 @@ let thesisForm = new Vue({
             let headers = getHeaders()
             let data = {
                 review_option: this.reviewOption,
+                words: this.keyWords,
+                subject: this.subject
             }
 
             axios.patch(url, data, {headers: headers})
@@ -135,6 +159,19 @@ let thesisForm = new Vue({
 
         downloadFile(){
             window.open(this.downloadFileUrl)
-        }
+        },
+
+        uploadFile(){
+            /* 上传文件到 input[type="file"] */
+            let uploadBtn = this.$refs.uploadFile
+            uploadBtn.click()
+        },
+
+        getFileInfo(event){
+            /* 获取一些文件信息 */
+            let file = event.target.files[0]
+            this.file = file
+            this.filename = file.name
+        },
     }
 })

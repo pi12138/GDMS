@@ -8,6 +8,7 @@ const process = new Vue({
         'report': "",
         'subjectName': "",
         design: "",
+        thesisId: ""
     },
     methods: {
         viewTaskBook(){
@@ -26,6 +27,10 @@ const process = new Vue({
             designForm.showDesignForm(this.design, this.subjectName)
         },
 
+        viewOrWriteThesis(){
+            thesisForm.showThesisForm(this.thesisId, this.subjectName)
+        },
+
         getInfo(){
             /* 获取学生的课题ID、任务书ID、开题报告等... */
 
@@ -41,6 +46,7 @@ const process = new Vue({
                     this.report = data.report_id
                     this.subjectName = data.subject_name
                     this.design = data.design_id
+                    this.thesisId = data.thesis_id
                 })
                 .catch(err => {
                     handleError(err)

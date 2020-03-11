@@ -115,6 +115,26 @@ const subjectList = new Vue({
             let designId = this.subjectList[index].design.id
             let subjectName = this.subjectList[index].subject_name
             designForm.showDesignForm(designId, subjectName)
+        },
+
+        handleThesis(thesis){
+            /* 处理毕业论文字段 */
+            if (thesis == null){
+                return `<span>未填写</span>`
+            }
+
+            if (thesis.review_option){
+                return `<a href="#">查看</a>`
+            }else{
+                return `<a href="#">审阅</a>`
+            }
+        },
+
+        reviewOrViewThesis(index){
+            /* 审核或者查看毕业论文 */
+            let thesisId = this.subjectList[index].thesis.id
+            let subjectName = this.subjectList[index].subject_name
+            thesisForm.showThesisForm(thesisId, subjectName)
         }
     },
 

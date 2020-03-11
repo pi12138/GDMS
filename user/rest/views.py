@@ -6,7 +6,7 @@ from user.rest.serializers import TeacherSettingsSerializer
 from user.models import Teacher
 from subject.models import TaskBook
 from report.models import Report
-from design.models import GraduationDesign
+from design.models import GraduationDesign, GraduationThesis
 
 
 class TeacherSettingsViewSet(ViewSet):
@@ -54,6 +54,7 @@ class StudentInfoViewSet(ViewSet):
         task_book = None
         report = None
         design = None
+        thesis = None
         if hasattr(user, 'select_student'):
             subject = user.select_student
 
@@ -69,12 +70,16 @@ class StudentInfoViewSet(ViewSet):
             query_set = GraduationDesign.objects.filter(subject_id=subject_id)
             design = query_set[0] if query_set.exists() else None
 
+            query_set = GraduationThesis.objects.filter(subject_id=subject_id)
+            thesis = query_set[0] if query_set.exists() else None
+
         res = {
             'subject_id': subject.id if subject else None,
             'subject_name': subject.subject_name if subject else None,
             'task_book_id': task_book.id if task_book else None,
             'report_id': report.id if report else None,
             'design_id': design.id if design else None,
+            'thesis_id': thesis.id if thesis else None,
         }
 
         return Response(res)

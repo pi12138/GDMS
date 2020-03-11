@@ -87,6 +87,7 @@ class SubjectInfoSerializer(serializers.ModelSerializer):
     questioner_info = serializers.SerializerMethodField(method_name='get_questioner', read_only=True)
     report = serializers.SerializerMethodField(method_name='get_report', read_only=True)
     design = serializers.SerializerMethodField(method_name='get_design', read_only=True)
+    thesis = serializers.SerializerMethodField(method_name='get_thesis', read_only=True)
 
     def get_student(self, obj):
         if obj.select_student is None:
@@ -136,6 +137,15 @@ class SubjectInfoSerializer(serializers.ModelSerializer):
                 'review_time': obj.graduationdesign.review_time
             }
             return design
+        return None
+
+    def get_thesis(self, obj):
+        if hasattr(obj, 'graduationthesis'):
+            thesis = {
+                'id': obj.graduationthesis.id,
+                'review_option': obj.graduationthesis.review_option
+            }
+            return thesis
         return None
 
     class Meta:

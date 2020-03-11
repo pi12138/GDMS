@@ -2,7 +2,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 
 from design.rest.serializers import GraduationDesignSerializer, GraduationThesisSerializer
-from design.models import GraduationDesign
+from design.models import GraduationDesign, GraduationThesis
 
 import datetime
 
@@ -37,7 +37,7 @@ class GraduationDesignViewSet(ViewSet):
         通用功能： 查看毕业设计
         """
         ret = self.handle_pk(pk)
-        if ret == dict:
+        if isinstance(ret, dict):
             return Response(ret, status=400)
 
         ser = GraduationDesignSerializer(instance=ret)
@@ -49,7 +49,7 @@ class GraduationDesignViewSet(ViewSet):
         学生功能：修改毕业设计
         """
         ret = self.handle_pk(pk)
-        if ret == dict:
+        if isinstance(ret, dict):
             return Response(ret, status=400)
 
         query_dict = request.data
@@ -70,7 +70,7 @@ class GraduationDesignViewSet(ViewSet):
         教师功能：审阅毕业设计
         """
         ret = self.handle_pk(pk)
-        if ret == dict:
+        if isinstance(ret, dict):
             return Response(ret, status=400)
 
         data = request.data
@@ -108,7 +108,7 @@ class GraduationThesisViewSet(ViewSet):
         query_dict = request.data
         data = dict()
         data['thesis'] = query_dict.get('file')
-        data['key_words'] = query_dict.get('key_words')
+        data['words'] = query_dict.get('words')
         data['summary'] = query_dict.get('summary')
         data['subject'] = request.user.student.select_student.id
         data['upload_time'] = datetime.datetime.now()
@@ -125,7 +125,7 @@ class GraduationThesisViewSet(ViewSet):
         通用功能: 查看毕业设计
         """
         ret = self.handle_pk(pk)
-        if ret == dict:
+        if isinstance(ret, dict):
             return Response(ret, status=400)
 
         ser = GraduationThesisSerializer(instance=ret)
@@ -137,20 +137,20 @@ class GraduationThesisViewSet(ViewSet):
         学生功能: 修改毕业论文
         """
         ret = self.handle_pk(pk)
-        if ret == dict:
+        if isinstance(ret, dict):
             return Response(ret, status=400)
 
         query_dict = request.data
         data = dict()
         data['thesis'] = query_dict.get('file')
-        data['key_words'] = query_dict.get('key_words')
+        data['words'] = query_dict.get('words')
         data['summary'] = query_dict.get('summary')
         data['subject'] = request.user.student.select_student.id
         data['upload_time'] = datetime.datetime.now()
 
         ser = GraduationThesisSerializer(instance=ret, data=data)
         if not ser.is_valid():
-            return Response({'msg': "更新毕业论文失败"}, status=400)
+            return Response({'msg': "更新毕业论文失败", 'error': ser.errors}, status=400)
 
         ser.save()
         return Response({'data': ser.data})
@@ -160,7 +160,7 @@ class GraduationThesisViewSet(ViewSet):
         教师功能: 审核毕业设计
         """
         ret = self.handle_pk(pk)
-        if ret == dict:
+        if isinstance(ret, dict):
             return Response(ret, status=400)
 
         data = request.data
@@ -168,18 +168,17 @@ class GraduationThesisViewSet(ViewSet):
 
         ser = GraduationThesisSerializer(instance=ret, data=data)
         if not ser.is_valid():
-            return Response({'msg': "审核毕业论文失败"}, status=400)
+            return Response({'msg': "审核毕业论文失败", 'error': ser.errors}, status=400)
 
         ser.save()
         return Response({'data': ser.data})
 
-
-def handle_pk(self, pk):
+    def handle_pk(self, pk):
         if not pk:
             return {'msg': "未传入毕业论文参数"}
 
-        query_set = GraduationDesign.objects.filter(pk=pk)
+        query_set = GraduationThesis.objects.filter(pk=pk)
         if not query_set.exists():
-            return {'msg': "毕业沦为不存在"}
+            return {'msg': "毕业论文不存在"}
 
         return query_set[0]
