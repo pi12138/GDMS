@@ -29,6 +29,7 @@ urlpatterns = [
     path("organization/", include(("organization.urls", "organization"), namespace="organization")),
     path("subject/", include(("subject.urls", "subject"), namespace="subject")),
     path('process/', include(('process.urls', 'process'), namespace='process')),
+    path('announcement/', include(('announcement.urls', 'announcement'), namespace='announcement')),
     # url(r'^login/', obtain_jwt_token),
 
     path('import_data/', include(('import_data.urls', 'import_data'), namespace='import_data')),
@@ -39,6 +40,7 @@ urlpatterns = [
     path('api/user/', include(('user.rest.urls', 'user'), namespace='api-user')),
     path('api/report/', include(('report.rest.urls', 'report'), namespace='api-report')),
     path('api/design/', include(('design.rest.urls', 'design'), namespace='api-design')),
+    path('api/announcement/', include(('announcement.rest.urls', 'announcement'), namespace='api-announcement')),
 
     # 为了访问上传的媒体文件
     url(r'media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
