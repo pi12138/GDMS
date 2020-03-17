@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'report',
     'design',
     'announcement',
+    'message_board',
 ]
 
 MIDDLEWARE = [
