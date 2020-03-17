@@ -3,6 +3,7 @@ from rest_framework.response import Response
 
 from announcement.models import Announcement
 from announcement.rest.serializers import AnnouncementSerializer
+from announcement.rest.paginations import CustomPageiantion
 
 import datetime
 
@@ -25,7 +26,7 @@ class AnnouncementViewSet(ViewSet):
         data['publisher'] = request.user.administrator.id
         data['publish_time'] = datetime.datetime.now()
         data['publish_content'] = form_data.get('publish_content')
-        data['publish_file'] = form_data.get('file')
+        data['publish_file'] = form_data.get('file', None)
 
         ser = AnnouncementSerializer(data=data)
         if not ser.is_valid():
@@ -74,3 +75,30 @@ class AnnouncementViewSet(ViewSet):
         ser = AnnouncementSerializer(instance=query_set[0])
 
         return Response({'data': ser.data})
+
+    def list(self, request):
+        """
+        公告列表
+        """
+        query_set = Announcement.objects.all()
+
+        page_obj = CustomPageiantion()
+        page_res = page_obj.paginate_queryset(queryset=query_set, request=request, view=self)
+        ser = AnnouncementSerializer(instance=page_res, many=True)
+
+        return page_obj.get_paginated_response(ser.data)
+
+    def destroy(self, requets, pk=None):
+        """
+        管理员: 删除公告
+        """
+        if not pk:
+            return Response({'msg': '未传入公告参数'}, status=400)
+
+        query_set = Announcement.objects.filter(pk=pk)
+        if not query_set.exists():
+            return Response({'msg': "该公告不存在"}, status=400)
+
+        query_set.delete()
+
+        return Response({'msg': "删除成功"})
