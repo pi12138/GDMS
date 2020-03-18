@@ -7,6 +7,7 @@ from user.models import Teacher
 from subject.models import TaskBook
 from report.models import Report
 from design.models import GraduationDesign, GraduationThesis
+from user.helpers import get_role
 
 
 class TeacherSettingsViewSet(ViewSet):
@@ -83,3 +84,62 @@ class StudentInfoViewSet(ViewSet):
         }
 
         return Response(res)
+
+
+class UserInfoViewSet(ViewSet):
+    """
+    用户信息
+    """
+
+    def list(self, request):
+        user = request.user
+
+        role_str, role_obj = get_role(auth_user=user)
+
+        if role_str == 'student':
+            return self.student_info(role_obj)
+        elif role_str == 'teacher':
+            return self.teacher_info(role_obj)
+
+    def student_info(self, role):
+        res_data = {
+            'role': 'student',
+            'user_id': role.account_id,
+            'student_id': role.id,
+            'student_name': role.name,
+            'guide_teacher_id': 0,
+            'guide_teacher_name': "",
+            'guide_teacher_user_id': 0
+        }
+
+        if hasattr(role, 'select_student'):
+            teacher = role.select_student.questioner
+            res_data['guide_teacher_id'] = teacher.id
+            res_data['guide_teacher_name'] = teacher.name
+            res_data['guide_teacher_user_id'] = teacher.account_id
+
+        return Response(res_data)
+
+    def teacher_info(self, role):
+        res_data = {
+            'role': 'teacher',
+            'user_id': role.account_id,
+            'teacher_id': role.id,
+            'teacher_name': role.name,
+            'guided_students': None
+        }
+
+        query_set = role.subject_set.filter(select_student__isnull=False).select_related('select_student')
+        students = list()
+        for i in query_set:
+            student_info = {
+                'student_id': i.select_student_id,
+                'student_name': i.select_student_name,
+                'student_user_id': i.select_student.account_id
+            }
+            students.append(student_info)
+
+        if len(students) > 0:
+            res_data['guided_students'] = students
+
+        return Response(res_data)

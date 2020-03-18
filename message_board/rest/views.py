@@ -71,7 +71,7 @@ class MessageBoardViewSet(ViewSet):
         ser.save()
         return Response({'data': ser.data})
 
-    @action(methods=["GET"])
+    @action(methods=["GET"], detail=True)
     def read_message(self, request, pk=None):
         """设置消息未已读"""
         if not pk:
@@ -86,7 +86,7 @@ class MessageBoardViewSet(ViewSet):
         obj.save()
         return Response({'msg': "设置成功"})
 
-    @action(methods=['POST'])
+    @action(methods=['POST'], detail=True)
     def reply_message(self, request, pk=None):
         """
         教师功能: 回复留言
@@ -116,8 +116,27 @@ class MessageBoardViewSet(ViewSet):
         ser.save()
         return Response({'data': ser.data})
 
-    def get_instructor(self, student):
-        """获取指导老师"""
-        if hasattr(student, 'select_student'):
-            return student.select_student.questioner
-        return None
+    @action(methods=["GET"], detail=False)
+    def publish_message(self, request):
+        """发出的消息"""
+        user = request.user
+
+        query_set = MessageBoard.objects.filter(publisher_id=user.id).order_by('-is_read', '-publish_time')
+        page_obj = CustomPageiantion()
+        data = page_obj.paginate_queryset(queryset=query_set, request=request, view=self)
+        ser = MessageBoardSerializer(instance=data, many=True)
+
+        return page_obj.get_paginated_response(ser.data)
+
+    @action(methods=['GET'], detail=False)
+    def receive_message(self, request):
+        """收到的消息"""
+        user = request.user
+
+        query_set = MessageBoard.objects.filter(receiver_id=user.id).order_by('-is_read', '-publish_time')
+        page_obj = CustomPageiantion()
+        data = page_obj.paginate_queryset(queryset=query_set, request=request, view=self)
+        ser = MessageBoardSerializer(instance=data, many=True)
+
+        return page_obj.get_paginated_response(ser.data)
+
