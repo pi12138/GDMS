@@ -2,12 +2,13 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from user.rest.serializers import TeacherSettingsSerializer
-from user.models import Teacher
-from subject.models import TaskBook
+from user.rest.serializers import TeacherSettingsSerializer, SelectedStudentSerializer
+from user.models import Teacher, Student
+from subject.models import TaskBook, Subject
 from report.models import Report
 from design.models import GraduationDesign, GraduationThesis
 from user.helpers import get_role
+from announcement.rest.paginations import CustomPageiantion
 
 
 class TeacherSettingsViewSet(ViewSet):
@@ -100,6 +101,8 @@ class UserInfoViewSet(ViewSet):
             return self.student_info(role_obj)
         elif role_str == 'teacher':
             return self.teacher_info(role_obj)
+        elif role_str == 'administrator':
+            return Response({'role': 'administrator'})
 
     def student_info(self, role):
         res_data = {
@@ -143,3 +146,19 @@ class UserInfoViewSet(ViewSet):
             res_data['guided_students'] = students
 
         return Response(res_data)
+
+
+class SelectedStudentViewSet(ViewSet):
+    """
+    已选题学生列表
+    """
+
+    def list(self, request):
+        query_set = Subject.objects.filter(select_student__isnull=False)
+        student_list = [i.select_student for i in query_set]
+
+        page_obj = CustomPageiantion()
+        data = page_obj.paginate_queryset(queryset=student_list, request=request, view=self)
+        ser = SelectedStudentSerializer(instance=data, many=True)
+
+        return page_obj.get_paginated_response(ser.data)

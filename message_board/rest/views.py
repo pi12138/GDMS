@@ -24,11 +24,13 @@ class MessageBoardViewSet(ViewSet):
         """
         user = request.query_params.get('user_id', 0)
 
-        q1 = Q()
-        if user:
-            q1 = Q(publisher_id=user)
+        if not user:
+            return Response({'msg': '请传入用户参数'}, status=400)
 
-        query_set = MessageBoard.objects.filter(q1, recevier_id=request.user.id)
+        q1 = Q(publisher_id=user)
+        q2 = Q(receiver_id=user)
+
+        query_set = MessageBoard.objects.filter(q1 | q2)
         page_obj = CustomPageiantion()
         page_data = page_obj.paginate_queryset(queryset=query_set, request=request, view=self)
         ser = MessageBoardSerializer(instance=page_data, many=True)

@@ -48,6 +48,7 @@ let messageBoard = new Vue({
         receiveMessageList: "",
         publishMessageList: "",
         guidedStudentList: "",
+        messageList: "",
 
         page1: "",
         page2: "",
@@ -199,6 +200,8 @@ let messageBoard = new Vue({
                 this.publisher = data.user_id
                 this.publisher_name = data.teacher_name
                 this.guidedStudentList = data.guided_students
+            }else if(data.role == 'administrator'){
+                studentList.getStudentList(studentList.url)
             }
         },
 
@@ -271,6 +274,26 @@ let messageBoard = new Vue({
             this.$refs.submitBtn2.removeAttribute('disabled')
         },
 
+        getMessageList(studentId){
+            /* 根据学生获取交流列表 */
+            let url = 'http://127.0.0.1:8000/api/message_board/?user_id=' + studentId
+
+            axios.get(url)
+                .then(res => {
+                    console.log(res)
+                    this.messageList = res.data.results
+
+                    this.$refs.messageList.classList.remove('hidden')
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        hiddenMessageList(){
+            this.$refs.messageList.classList.add('hidden')
+        }
+
     },
 
     beforeMount() {
@@ -280,5 +303,37 @@ let messageBoard = new Vue({
         this.getUserInfo()
         this.getReceiveMessage(url1)
         this.getPublishMessage(url2)
+    }
+})
+
+
+let studentList = new Vue({
+    el: "#studentList",
+    data: {
+        studentList: "",
+        url: "http://127.0.0.1:8000/api/user/selected_students/",
+        nextUrl: "",
+        previousUrl: "",
+        page: "",
+    },
+    methods: {
+        getStudentList(url){
+            axios.get(url)
+                .then(res => {
+                    console.log(res)
+                    let data = res.data
+                    this.studentList = data.results
+                    this.nextUrl = data.next
+                    this.previousUrl = data.previous
+                    this.page = data.page
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        viewMessageList(studentId){
+            messageBoard.getMessageList(studentId)
+        }
     }
 })
