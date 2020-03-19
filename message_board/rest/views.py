@@ -121,7 +121,7 @@ class MessageBoardViewSet(ViewSet):
         """发出的消息"""
         user = request.user
 
-        query_set = MessageBoard.objects.filter(publisher_id=user.id).order_by('-is_read', '-publish_time')
+        query_set = MessageBoard.objects.filter(publisher_id=user.id).order_by('is_read', '-publish_time')
         page_obj = CustomPageiantion()
         data = page_obj.paginate_queryset(queryset=query_set, request=request, view=self)
         ser = MessageBoardSerializer(instance=data, many=True)
@@ -133,7 +133,7 @@ class MessageBoardViewSet(ViewSet):
         """收到的消息"""
         user = request.user
 
-        query_set = MessageBoard.objects.filter(receiver_id=user.id).order_by('-is_read', '-publish_time')
+        query_set = MessageBoard.objects.filter(receiver_id=user.id).order_by('is_read', '-publish_time')
         page_obj = CustomPageiantion()
         data = page_obj.paginate_queryset(queryset=query_set, request=request, view=self)
         ser = MessageBoardSerializer(instance=data, many=True)

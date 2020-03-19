@@ -64,6 +64,7 @@ let messageBoard = new Vue({
             this.title = this.content = this.annex = this.publisher = this.receiver = this.publish_time = ""
             this.publisher_name = this.receiver_name = this.filename = this.file = ""
             this.$refs.submitBtn.removeAttribute('disabled')
+            this.$refs.uploadBtn.removeAttribute('disabled')
         },
 
         showMessageBoardForm(){
@@ -207,6 +208,7 @@ let messageBoard = new Vue({
             this.content = item.content
             this.publisher_name = item.publisher_info.name
             this.receiver_name = item.receiver_info.name
+            this.receiver = item.receiver
             this.publish_time = item.publish_time
             this.annex = item.annex
             this.filename = item.filename
@@ -214,6 +216,25 @@ let messageBoard = new Vue({
             this.$refs.submitBtn.setAttribute('disabled', 'disabled')
             this.$refs.uploadBtn.setAttribute('disabled', 'disabled')
             this.$refs.messageBoardForm.classList.remove('hidden')
+
+            if (type == 0){
+                this.setMessageIsRead(item)
+            }
+        },
+
+        viewMessageForm2(item, type){
+            /* 展示单个留言信息 */
+            this.title = item.title
+            this.content = item.content
+            this.publisher_name = item.publisher_info.name
+            this.receiver_name = item.receiver_info.name
+            this.publish_time = item.publish_time
+            this.annex = item.annex
+            this.filename = item.filename
+
+            this.$refs.submitBtn2.setAttribute('disabled', 'disabled')
+            this.$refs.uploadBtn2.setAttribute('disabled', 'disabled')
+            this.$refs.messageBoardForm2.classList.remove('hidden')
 
             if (type == 0){
                 this.setMessageIsRead(item)
@@ -240,7 +261,15 @@ let messageBoard = new Vue({
             }else{
                 return "未读"
             }
-        }
+        },
+
+        hiddenMessageBoardForm2(){
+            /* 关闭留言板表单 */
+            this.$refs.messageBoardForm2.classList.add('hidden')
+            this.title = this.content = this.annex = this.publisher = this.receiver = this.publish_time = ""
+            this.publisher_name = this.receiver_name = this.filename = this.file = ""
+            this.$refs.submitBtn2.removeAttribute('disabled')
+        },
 
     },
 
@@ -248,7 +277,7 @@ let messageBoard = new Vue({
         let url1 = 'http://127.0.0.1:8000/api/message_board/receive_message/'
         let url2 = 'http://127.0.0.1:8000/api/message_board/publish_message/'
 
-        // this.getUserInfo()
+        this.getUserInfo()
         this.getReceiveMessage(url1)
         this.getPublishMessage(url2)
     }

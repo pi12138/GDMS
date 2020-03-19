@@ -134,7 +134,7 @@ class UserInfoViewSet(ViewSet):
         for i in query_set:
             student_info = {
                 'student_id': i.select_student_id,
-                'student_name': i.select_student_name,
+                'student_name': i.select_student.name,
                 'student_user_id': i.select_student.account_id
             }
             students.append(student_info)
