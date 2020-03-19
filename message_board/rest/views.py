@@ -73,7 +73,7 @@ class MessageBoardViewSet(ViewSet):
 
     @action(methods=["GET"], detail=True)
     def read_message(self, request, pk=None):
-        """设置消息未已读"""
+        """设置消息已读"""
         if not pk:
             return Response({'msg': "未传入消息参数"}, status=400)
 

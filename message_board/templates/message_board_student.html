@@ -63,10 +63,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in receiveMessageList" :key="item.id">
-                        <td @click="viewMessageForm(item)"><a href="#" v-text="item.title"></a></td>
+                        <td @click="viewMessageForm(item, 0)"><a href="#" v-text="item.title"></a></td>
                         <td v-text="item.publisher_info.name"></td>
                         <td v-text="item.publish_time"></td>
-                        <td v-text="is_read_text"></td>
+                        <td v-text="is_read_text(item.is_read)"></td>
                     </tr>
 
                 </tbody>
@@ -114,9 +114,9 @@
                 </thead>
                 <tbody>
                 <tr v-for="(item, index) in publishMessageList" :key="item.id">
-                    <td @click="viewMessageForm(item)"><a href="#" v-text="item.title"></a></td>
+                    <td @click="viewMessageForm(item, 1)"><a href="#" v-text="item.title"></a></td>
                     <td v-text="item.publish_time"></td>
-                    <td v-text="is_read_text"></td>
+                    <td v-text="is_read_text(item.is_read)"></td>
                 </tr>
                 </tbody>
             </table>

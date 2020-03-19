@@ -68,6 +68,7 @@ let messageBoard = new Vue({
 
         showMessageBoardForm(){
             /* 显示留言板表单 */
+            this.getUserInfo()
             this.$refs.messageBoardForm.classList.remove('hidden')
         },
 
@@ -200,7 +201,7 @@ let messageBoard = new Vue({
             }
         },
 
-        viewMessageForm(item){
+        viewMessageForm(item, type){
             /* 展示单个留言信息 */
             this.title = item.title
             this.content = item.content
@@ -213,25 +214,41 @@ let messageBoard = new Vue({
             this.$refs.submitBtn.setAttribute('disabled', 'disabled')
             this.$refs.uploadBtn.setAttribute('disabled', 'disabled')
             this.$refs.messageBoardForm.classList.remove('hidden')
-        }
 
-    },
+            if (type == 0){
+                this.setMessageIsRead(item)
+            }
+        },
 
-    computed: {
-        is_read_text: function(){
-            if (this.is_read == true){
+        setMessageIsRead(item){
+            /* 设置消息已读 */
+            let url = `http://127.0.0.1:8000/api/message_board/${item.id}/read_message/`
+
+            axios.get(url)
+                .then(res => {
+                    console.log(res)
+                    item.is_read = true
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        is_read_text(is_read){
+            if (is_read == true){
                 return "已读"
             }else{
                 return "未读"
             }
         }
+
     },
 
     beforeMount() {
         let url1 = 'http://127.0.0.1:8000/api/message_board/receive_message/'
         let url2 = 'http://127.0.0.1:8000/api/message_board/publish_message/'
 
-        this.getUserInfo()
+        // this.getUserInfo()
         this.getReceiveMessage(url1)
         this.getPublishMessage(url2)
     }
