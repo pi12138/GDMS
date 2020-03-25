@@ -38,7 +38,7 @@ class PendingSubjectViewSet(ViewSet):
             return Response({'error': "发生错误", 'error_code': ser.errors}, status=400)
 
         ser.save()
-        return Response({'resheader is not definedults': ser.data, 'msg': '审核成功'})
+        return Response({'data': ser.data, 'msg': '审核成功'})
 
     @staticmethod
     def pagination(data, request):
