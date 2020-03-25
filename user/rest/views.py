@@ -162,3 +162,53 @@ class SelectedStudentViewSet(ViewSet):
         ser = SelectedStudentSerializer(instance=data, many=True)
 
         return page_obj.get_paginated_response(ser.data)
+
+
+class MyTaskViewSet(ViewSet):
+    """
+    我的任务
+    """
+    def list(self, request):
+        role_str, role_obj = get_role(request.user)
+
+        role_dict = {
+            'student': self.student_task,
+            'teacher': self.teacher_task,
+        }
+
+        res = role_dict[role_str](role_obj)
+
+    def student_task(self, user):
+
+        subject = None
+        task_book = None
+        report = None
+        design = None
+        thesis = None
+        if hasattr(user, 'select_student'):
+            subject = user.select_student
+
+        if subject:
+            subject_id = subject.id
+
+            query_set = TaskBook.objects.filter(subject_id=subject_id, review_result=1)
+            task_book = query_set[0] if query_set.exists() else None
+
+            query_set = Report.objects.filter(subject_id=subject_id)
+            report = query_set[0] if query_set.exists() else None
+
+            query_set = GraduationDesign.objects.filter(subject_id=subject_id)
+            design = query_set[0] if query_set.exists() else None
+
+            query_set = GraduationThesis.objects.filter(subject_id=subject_id)
+            thesis = query_set[0] if query_set.exists() else None
+
+        res = {
+            'subject_id': subject.id if subject else None,
+            'task_book_id': task_book.id if task_book else None,
+            'report_id': report.id if report else None,
+            'design_id': design.id if design else None,
+            'thesis_id': thesis.id if thesis else None,
+        }
+
+        return res

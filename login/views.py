@@ -30,15 +30,16 @@ class LoginView(View):
 
             role_str, role_obj = get_role(user)
             role_dict = {
-                "teacher": "teacher_home.html", 
-                "student": "student_home.html",
-                "administrator": "administrator_home.html",
+                "teacher": "user/teacher_settings/",
+                "student": "user/student_settings/",
+                "administrator": "user/administrator_settings/",
             }
 
             if not role_str:
                 return render(request, 'login.html', {'error_msg': "账户异常！"})
             if not next:
-                return render(request, role_dict[role_str])
+                # return render(request, role_dict[role_str])
+                return redirect(role_dict[role_str])
             else:
                 return redirect(next)
         

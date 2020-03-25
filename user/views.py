@@ -150,3 +150,18 @@ def student_subject(request):
 
     if hasattr(user, 'apply_students'):
         pass
+
+
+class StudentHomeView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'student_home.html')
+
+
+class TeacherHomeView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'teacher_home.html')
+
+
+class AdminHomeView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'administrator_home.html')
