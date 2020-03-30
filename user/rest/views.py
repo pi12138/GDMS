@@ -2,8 +2,10 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from django.contrib.auth.models import User
+
 from user.rest.serializers import TeacherSettingsSerializer, SelectedStudentSerializer
-from user.models import Teacher, Student
+from user.models import Teacher, Student, Administrator
 from subject.models import TaskBook, Subject
 from report.models import Report
 from design.models import GraduationDesign, GraduationThesis
@@ -104,6 +106,23 @@ class UserInfoViewSet(ViewSet):
         elif role_str == 'administrator':
             return Response({'role': 'administrator'})
 
+    def create(self, request):
+        """管理员功能--添加用户"""
+        if not hasattr(request.user, 'administrator'):
+            return Response({'error': '必须是管理员用户操作'}, status=400)
+
+        role = request.data.get('role', "")
+        role_dict = {
+            'admin': self.handle_admin_info,
+            'student': self.handle_student_info,
+            'teacher': self.handle_teacher_info
+        }
+
+        if not role:
+            return Response({'error': '未传入用户身份'}, status=400)
+
+        return role_dict[role]()
+
     def student_info(self, role):
         res_data = {
             'role': 'student',
@@ -146,6 +165,79 @@ class UserInfoViewSet(ViewSet):
             res_data['guided_students'] = students
 
         return Response(res_data)
+
+    def handle_admin_info(self, request):
+        faculty = request.user.administrator.faculty_id
+        data = request.data
+        username = data.get('username', "")
+        password = data.get('password', '')
+        name = data.get('name')
+
+        if not all([faculty, username, password]):
+            return Response({'error': '用户信息不全'}, status=400)
+
+        user = User.objects.create_user(username=username, password=password)
+
+        try:
+            admin = Administrator.objects.create(faculty=faculty, account_id=user.id, name=name)
+        except Exception as e:
+            return Response({'error': e}, status=400)
+
+        return Response({'data': '新建管理员用户{}成功'.format(admin.id)})
+
+    def handle_student_info(self, request):
+        data = request.data
+        username = data.get('username', "")
+        password = data.get('password', '')
+        name = data.get('name', '')
+        gender = data.get('gender', '')
+        klass = data.get('klass', '')
+        direction = data.get('direction', '')
+        profession = data.get('profession', '')
+        faculty = request.user.administrator.faculty_id
+        phone = data.get('phone', '')
+        qq = data.get('qq', '')
+
+        if not all([name, phone, qq, faculty, username, password]):
+            return Response({'error': "用户信息不全"}, status=400)
+
+        user = User.objects.create_user(username=username, password=password)
+
+        try:
+            student = Student.objects.create(name=name, gender=gender, klass_id=klass,
+                                             diretcion_id=direction, profession_id=profession,
+                                             faculty_id=faculty, phone=phone, qq=qq, account_id=user.id)
+        except Exception as e:
+            return Response({'error': e})
+
+        return Response({'data': '新建学生{}成功'.format(student.id)})
+    
+    def handle_teacher_info(self, request):
+        data = request.data
+        username = data.get('username', '')
+        password = data.get('password', '')
+        name = data.get('name', '')
+        gender = data.get('gender', '')
+        education = data.get('education', '')
+        teacher_title = data.get('teacher_title', '')
+        phone = data.get('phone', '')
+        qq = data.get('qq', '')
+        office = data.get('office', '')
+        faculty = request.user.administrator.faculty_id
+
+        if not all([username, password, name, phone, qq, faculty]):
+            return Response({'error': "用户信息不全"}, status=400)
+
+        user = User.objects.create_user(username=username, password=password)
+
+        try:
+            teacher = Teacher.objects.create(name=name, gender=gender, education=education,
+                                             teacher_title=teacher_title, phone=phone, office_id=office,
+                                             faculty_id=faculty)
+        except Exception as e:
+            return Response({'error': e}, status=400)
+
+        return Response({'data': '新建教师用户{}成功'.format(teacher.id)})
 
 
 class SelectedStudentViewSet(ViewSet):
