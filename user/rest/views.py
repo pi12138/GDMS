@@ -121,7 +121,7 @@ class UserInfoViewSet(ViewSet):
         if not role:
             return Response({'error': '未传入用户身份'}, status=400)
 
-        return role_dict[role]()
+        return role_dict[role](request)
 
     def student_info(self, role):
         res_data = {
@@ -179,7 +179,7 @@ class UserInfoViewSet(ViewSet):
         user = User.objects.create_user(username=username, password=password)
 
         try:
-            admin = Administrator.objects.create(faculty=faculty, account_id=user.id, name=name)
+            admin = Administrator.objects.create(faculty_id=faculty, account_id=user.id, name=name)
         except Exception as e:
             return Response({'error': e}, status=400)
 

@@ -31,21 +31,29 @@ function getHeaders() {
 
 let addUser = new Vue({
     el: '#addUser',
-    data: {},
+    data: {
+    },
     methods: {
         addAdminUser(){
             adminUser.showUserForm()
+            teacherUser.hiddenUserForm()
+            studentUser.hiddenUserForm()
         },
 
         addStudentUser(){
-
+            studentUser.showUserForm()
+            teacherUser.hiddenUserForm()
+            adminUser.hiddenUserForm()
         },
 
         addTeacherUser(){
-
+            teacherUser.showUserForm()
+            studentUser.hiddenUserForm()
+            adminUser.hiddenUserForm()
         }
+
     }
-})
+});
 
 
 let adminUser = new Vue({
@@ -53,12 +61,18 @@ let adminUser = new Vue({
     data: {
         username: "",
         password: "",
-        name: ""
+        name: "",
+        role: 'admin'
 
     },
     methods: {
         createUser(){
-            let url = '/api/user/'
+            if (this.username == "" || this.password == "" || this.name == ""){
+                alert("请补全必要信息")
+                return
+            }
+
+            let url = '/api/user/user_info/'
             let headers = getHeaders()
 
             axios.post(url, this.$data, {headers: headers})
@@ -93,11 +107,12 @@ let teacherUser = new Vue({
         teacher_title: "",
         phone: "",
         qq: '',
-        office: ''
+        office: '',
+        role: 'teacher'
     },
     methods: {
         createUser(){
-            let url = '/api/user/'
+            let url = '/api/user/user_info/'
             let headers = getHeaders()
 
             axios.post(url, this.$data, {headers: headers})
@@ -108,9 +123,17 @@ let teacherUser = new Vue({
                 .catch(err => {
                     handleError(err)
                 })
+        },
+
+        showUserForm(){
+            this.$refs.teacherUser.classList.remove('hidden')
+        },
+
+        hiddenUserForm(){
+            this.$refs.teacherUser.classList.add('hidden')
         }
     }
-})
+});
 
 
 let studentUser = new Vue({
@@ -124,11 +147,12 @@ let studentUser = new Vue({
         direction: '',
         profession: '',
         phone: '',
-        qq: ''
+        qq: '',
+        role: 'student'
     },
     methods: {
         createUser(){
-            let url = '/api/user/'
+            let url = '/api/user/user_info/'
             let headers = getHeaders()
 
             axios.post(url, this.$data, {headers: headers})
@@ -139,6 +163,14 @@ let studentUser = new Vue({
                 .catch(err => {
                     handleError(err)
                 })
+        },
+
+        showUserForm(){
+            this.$refs.studentUser.classList.remove('hidden')
+        },
+
+        hiddenUserForm(){
+            this.$refs.studentUser.classList.add('hidden')
         }
     }
-})
+});
