@@ -279,10 +279,50 @@ class UserInfoViewSet(ViewSet):
         return Response(res)
 
     def handle_teacher_file(self, request, file):
-        pass
+        file_data = file.read()
+        data_list = handle_excel_info(file_data)
+        faculty = request.user.administrator.faculty_id
+
+        i = 1
+        error_list = list()
+        success_list = list()
+        print(data_list)
+        for data in data_list[1:]:
+            try:
+                user = User.objects.create_user(username=data[0], password=data[1])
+                Teacher.objects.create(faculty_id=faculty, account_id=user.id, name=data[2], phone=data[3], qq=data[4])
+                success_list.append({'index': i, 'username': user.username})
+            except Exception as e:
+                error_list.append({'index': i, 'error': e})
+
+        res = {
+            'success': success_list,
+            'error': error_list
+        }
+        return Response(res)
 
     def handle_student_file(self, request, file):
-        pass
+        file_data = file.read()
+        data_list = handle_excel_info(file_data)
+        faculty = request.user.administrator.faculty_id
+
+        i = 1
+        error_list = list()
+        success_list = list()
+        print(data_list)
+        for data in data_list[1:]:
+            try:
+                user = User.objects.create_user(username=data[0], password=data[1])
+                Student.objects.create(faculty_id=faculty, account_id=user.id, name=data[2], phone=data[3], qq=data[4])
+                success_list.append({'index': i, 'username': user.username})
+            except Exception as e:
+                error_list.append({'index': i, 'error': e})
+
+        res = {
+            'success': success_list,
+            'error': error_list
+        }
+        return Response(res)
 
 
 class SelectedStudentViewSet(ViewSet):
