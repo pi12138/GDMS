@@ -128,7 +128,8 @@ class AdminSettings(LoginRequiredMixin, View):
         admin = request.user.administrator
         context = {
             'faculty': admin.faculty,
-            'name': admin.name
+            'name': admin.name,
+            'faculty_id': admin.faculty_id
         }
         return render(request, 'admin_settings.html', context)
 

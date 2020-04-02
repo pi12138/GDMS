@@ -233,7 +233,7 @@ class UserInfoViewSet(ViewSet):
         try:
             teacher = Teacher.objects.create(name=name, gender=gender, education=education,
                                              teacher_title=teacher_title, phone=phone, office_id=office,
-                                             faculty_id=faculty)
+                                             faculty_id=faculty, account_id=user.id, qq=qq)
         except Exception as e:
             return Response({'error': e}, status=400)
 

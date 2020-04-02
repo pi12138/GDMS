@@ -29,6 +29,9 @@ function getHeaders() {
 }
 
 
+let facultyId = document.getElementById('facultyId').value
+
+
 let addUser = new Vue({
     el: '#addUser',
     data: {
@@ -108,14 +111,24 @@ let teacherUser = new Vue({
         phone: "",
         qq: '',
         office: '',
-        role: 'teacher'
+        role: 'teacher',
+        officeList: "",
     },
     methods: {
         createUser(){
+            if (this.username == "" || this.password == "" || this.name == '' || this.gender == ''
+                || this.education == '' || this.teacher_title == '' || this.phone == '' || this.qq == ''
+                || this.office == ''){
+                alert('请补全必要信息')
+                return
+            }
+
             let url = '/api/user/user_info/'
             let headers = getHeaders()
+            let data = Object.assign({}, this.$data)
+            delete data.officeList
 
-            axios.post(url, this.$data, {headers: headers})
+            axios.post(url, data, {headers: headers})
                 .then(res => {
                     console.log(res.data)
                     alert('创建教师用户成功')
@@ -131,7 +144,24 @@ let teacherUser = new Vue({
 
         hiddenUserForm(){
             this.$refs.teacherUser.classList.add('hidden')
+        },
+
+        get_office(){
+            /* 获取教研室 */
+            let url = '/organization/offices/?faculty=' + facultyId
+
+            axios.get(url)
+                .then(res => {
+                    this.officeList = res.data
+                })
+                .catch(err => {
+                    handleError(err)
+                })
         }
+    },
+
+    beforeMount(){
+        this.get_office()
     }
 });
 
@@ -148,14 +178,23 @@ let studentUser = new Vue({
         profession: '',
         phone: '',
         qq: '',
-        role: 'student'
+        role: 'student',
+
+        professionList: "",
+        directionList: "",
+        klassList: "",
+
     },
     methods: {
         createUser(){
             let url = '/api/user/user_info/'
             let headers = getHeaders()
+            let data = Object.assign({}, this.$data)
+            delete data.professionList
+            delete data.directionList
+            delete data.klassList
 
-            axios.post(url, this.$data, {headers: headers})
+            axios.post(url, data, {headers: headers})
                 .then(res => {
                     console.log(res.data)
                     alert('新建学生用户成功')
@@ -171,6 +210,54 @@ let studentUser = new Vue({
 
         hiddenUserForm(){
             this.$refs.studentUser.classList.add('hidden')
+        },
+
+        get_profession(){
+            let url = '/organization/professions/?faculty_id=' + facultyId
+
+            axios.get(url)
+                .then(res => {
+                    this.professionList = res.data
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+        },
+
+        get_direction(){
+            if (this.profession == ""){
+                return
+            }
+
+            let url = '/organization/directions/?profession_id=' + this.profession
+
+            axios.get(url)
+                .then(res => {
+                    this.directionList = res.data
+                })
+                .catch(err => {
+                    handle(err)
+                })
+        },
+
+        get_klass(){
+            if (this.direction == ''){
+                return
+            }
+
+            let url = '/organization/klasses/?direction_id=' + this.direction
+
+            axios.get(url)
+                .then(res => {
+                    this.klassList = res.data
+                })
+                .catch(err => {
+                    handleError(err)
+                })
         }
+    },
+
+    beforeMount(){
+        this.get_profession()
     }
 });
