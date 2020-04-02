@@ -11,6 +11,7 @@ from report.models import Report
 from design.models import GraduationDesign, GraduationThesis
 from user.helpers import get_role
 from announcement.rest.paginations import CustomPageiantion
+from import_data.helpers import handle_excel_info
 
 
 class TeacherSettingsViewSet(ViewSet):
@@ -238,6 +239,50 @@ class UserInfoViewSet(ViewSet):
             return Response({'error': e}, status=400)
 
         return Response({'data': '新建教师用户{}成功'.format(teacher.id)})
+
+    @action(methods=['POST'], detail=False)
+    def import_user(self, request):
+        """批量导入系统用户"""
+        query_dict = request.data
+        user_type = query_dict.get('type')
+        file = query_dict.get('file')
+
+        type_dict = {
+            'admin': self.handle_admin_file,
+            'teacher': self.handle_teacher_file,
+            'student': self.handle_student_file,
+        }
+
+        return type_dict[user_type](request, file)
+
+    def handle_admin_file(self, request, file):
+        file_data = file.read()
+        data_list = handle_excel_info(file_data)
+        faculty = request.user.administrator.faculty_id
+
+        i = 1
+        error_list = list()
+        success_list = list()
+        print(data_list)
+        for data in data_list[1:]:
+            try:
+                user = User.objects.create_user(username=data[0], password=data[1])
+                Administrator.objects.create(faculty_id=faculty, account_id=user.id, name=data[2])
+                success_list.append({'index': i, 'username': user.username})
+            except Exception as e:
+                error_list.append({'index': i, 'error': e})
+
+        res = {
+            'success': success_list,
+            'error': error_list
+        }
+        return Response(res)
+
+    def handle_teacher_file(self, request, file):
+        pass
+
+    def handle_student_file(self, request, file):
+        pass
 
 
 class SelectedStudentViewSet(ViewSet):

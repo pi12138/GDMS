@@ -35,6 +35,8 @@ let facultyId = document.getElementById('facultyId').value
 let addUser = new Vue({
     el: '#addUser',
     data: {
+        type: 0,
+        file: '',
     },
     methods: {
         addAdminUser(){
@@ -53,6 +55,32 @@ let addUser = new Vue({
             teacherUser.showUserForm()
             studentUser.hiddenUserForm()
             adminUser.hiddenUserForm()
+        },
+
+        importUser(){
+            if (this.type == 0){
+                alert('必须选择用户类型')
+                return
+            }
+
+            let url = '/api/user/user_info/import_user/'
+            let headers = getHeaders()
+            let formData = new FormData()
+            formData.append('file', this.file)
+            formData.append('type', this.type)
+
+            axios.post(url, formData, {'headers': headers})
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch(err => {
+                    handleError(err)
+                })
+
+        },
+
+        getFile(event){
+            this.file = event.target.files[0]
         }
 
     }

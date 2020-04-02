@@ -7,7 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 from user.helpers import get_role
 from user.mixins import LoginRequiredMixin
 from organization.models import Faculty
-from import_data.helpers import handle_excel_info
 
 import json
 
@@ -167,30 +166,3 @@ class TeacherHomeView(LoginRequiredMixin, View):
 class AdminHomeView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'administrator_home.html')
-
-
-class ImportUserInfoVIew(LoginRequiredMixin, View):
-    def post(self, request):
-        user_type = request.POST.get('type')
-        file = request.FILES.get('userInfoFile')
-
-        type_dict = {
-            'admin': self.handle_admin_file,
-            'teacher': self.handle_teacher_file,
-            'student': self.handle_student_file,
-        }
-
-        return type_dict[user_type](file)
-
-    def handle_admin_file(self, file):
-        file_data = file.read()
-        data_list = handle_excel_info(file_data)
-        
-        
-        pass
-
-    def handle_teacher_file(self, file):
-        pass
-
-    def handle_student_file(self, file):
-        pass

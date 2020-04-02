@@ -107,11 +107,11 @@
         <br><br><br>
 
         <!-- 导入用户信息表单 -->
-        <form action="/user/import_user/" class="form">
+        <form class="form" method="post">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <select name="type" class="form-control">
+                    <select name="type" class="form-control" v-model="type">
                         <option value="0" selected>请选择要添加的用户类型</option>
                         <option value="admin">管理员用户</option>
                         <option value="teacher">教师用户</option>
@@ -120,11 +120,11 @@
                 </div>
 
                 <div class="col-md-4 form-group">
-                    <input type="file" class="form-control" id="userInfoFile" name="userInfoFile">
+                    <input type="file" class="form-control" id="userInfoFile" name="userInfoFile" ref="file" @change="getFile">
                 </div>
 
                 <div class="col-md-1 form-group">
-                    <input type="submit" class="form-control" value="提交">
+                    <input type="button" class="form-control" value="提交" @click="importUser">
                 </div>
             </div>
         </form>
