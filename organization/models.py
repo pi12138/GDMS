@@ -61,3 +61,13 @@ class Office(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Location(models.Model):
+    """
+    地点模型
+    """
+    location_number = models.CharField(verbose_name='地点代号', max_length=100, unique=True)
+    location_desc = models.TextField(verbose_name="地点详细信息描述", blank=True, null=True)
+
+

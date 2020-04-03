@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 
 from .helpers import handle_excel_info
-from organization.models import Faculty, Profession, Direction, Klass, Office
+from organization.models import Faculty, Profession, Direction, Klass, Office, Location
 # Create your views here.
 
 
@@ -75,3 +75,33 @@ class ImportData(View):
                               )
 
 
+class ImportLocationInfo(View):
+    """
+    导入答辩地点信息
+    """
+
+    def get(self, request):
+        return render(request, 'import_data.html')
+
+    def post(self, request):
+        file = request.FILES.get('file')
+
+        context = {
+            'info': '',
+            'error_info': ''
+        }
+        error_info = list()
+
+        if not file:
+            context['info'] = '请传入文件'
+            return render(request, 'import_data.html', context)
+
+        try:
+            file_data = file.read()
+            data_list = handle_excel_info(file_data)
+            for data in data_list[1:]:
+                Location.objects.create(location_number=data[0], location_desc=data[1])
+        except Exception as e:
+            error_info.append(e)
+
+        return render(request, 'import_data.html', context)
