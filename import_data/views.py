@@ -81,7 +81,7 @@ class ImportLocationInfo(View):
     """
 
     def get(self, request):
-        return render(request, 'import_data.html')
+        return render(request, 'import_location_data.html')
 
     def post(self, request):
         file = request.FILES.get('file')
@@ -94,7 +94,7 @@ class ImportLocationInfo(View):
 
         if not file:
             context['info'] = '请传入文件'
-            return render(request, 'import_data.html', context)
+            return render(request, 'import_location_data.html', context)
 
         try:
             file_data = file.read()
@@ -104,4 +104,4 @@ class ImportLocationInfo(View):
         except Exception as e:
             error_info.append(e)
 
-        return render(request, 'import_data.html', context)
+        return render(request, 'import_location_data.html', context)
