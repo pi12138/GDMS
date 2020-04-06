@@ -1,5 +1,5 @@
 
-#reportForm, #taskBookForm, #designForm, #thesisForm{
+#reportForm, #taskBookForm, #designForm, #thesisForm, #location{
     z-index: 1000;
     position: absolute;
     top: 80px;

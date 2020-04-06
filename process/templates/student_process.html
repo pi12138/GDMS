@@ -89,7 +89,7 @@
                 <img src="/static/images/箭头1.png" alt="" class="image">
             </div>
 
-            <div class="image_container">
+            <div class="image_container" @click="viewOrSelectLocation">
                 <img src="/static/images/Location.png" alt="任务书" class="image">
                 <h5 class="">答辩地点</h5>
             </div>
@@ -439,12 +439,47 @@
     </div>
 
 
+    <!-- 答辩地点 -->
+    <div class="container hidden" id="location" ref="location">
+        <div class="text-header">
+            <h3 class="text-center">选择答辩地点</h3>
+        </div>
+
+        <form action="" class="form">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <select class="form-control" v-model="location">
+                        <option value="">请选择答辩地点</option>
+                        <option v-for="(item, index) in locationList" :key="item.id" :value="item.id" v-text="item.location_number"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" placeholder="已选择答辩地点" :value="location_number" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-10">
+                    <textarea cols="30" rows="3" placeholder="答辩地点详细信息" class="form-control" :value="location_desc" disabled></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-1">
+                    <input type="button" class="form-control btn-primary" value="提交" @click="selectLocation">
+                </div>
+                <div class="form-group col-md-1">
+                    <input type="button" class="form-control btn-default" value="关闭" @click="hiddenLocationForm">
+                </div>
+            </div>
+        </form>
+    </div>
+
     <script src="/static/js/vue.js"></script>
     <script src="/static/js/axios.min.js"></script>
     <script src="/static/js/task_book.js"></script>
     <script src="/static/js/report_form.js"></script>
     <script src="/static/js/design_form.js"></script>
     <script src="/static/js/thesis_form.js"></script>
+    <script src="/static/js/location.js"></script>
     <script src="/static/js/student_process.js"></script>
 </body>
 

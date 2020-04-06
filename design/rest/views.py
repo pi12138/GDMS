@@ -1,8 +1,11 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
-from design.rest.serializers import GraduationDesignSerializer, GraduationThesisSerializer
-from design.models import GraduationDesign, GraduationThesis
+from design.rest.serializers import GraduationDesignSerializer, GraduationThesisSerializer, LocationSerializer, \
+    GraduationReplySerializer
+from design.models import GraduationDesign, GraduationThesis, GraduationReply
+from organization.models import Location
 
 import datetime
 
@@ -182,3 +185,37 @@ class GraduationThesisViewSet(ViewSet):
             return {'msg': "毕业论文不存在"}
 
         return query_set[0]
+
+
+class GraduationReplyViewSet(ViewSet):
+    """
+    毕业答辩地点
+    """
+    def list(self, request):
+        query_set = Location.objects.all()
+        ser = LocationSerializer(instance=query_set, many=True)
+        return Response(ser.data)
+
+    def create(self, request):
+        data = request.data
+        data['select_time'] = datetime.datetime.now()
+        data['student'] = request.user.student.id
+
+        ser = GraduationReplySerializer(data=data)
+        if not ser.is_valid():
+            return Response({'msg': '选择答辩地点失败', 'error': ser.errors}, status=400)
+
+        ser.save()
+
+        return Response({'data': ser.data})
+
+    @action(methods=['GET'], detail=False)
+    def location(self, request):
+        student = request.user.student
+        query_set = GraduationReply.objects.filter(student_id=student.id)
+        if not query_set.exists():
+            return Response({'msg': '未选择答辩地点', 'data': ''})
+
+        location = query_set[0].location
+        ser = LocationSerializer(instance=location)
+        return Response({'data': ser.data})

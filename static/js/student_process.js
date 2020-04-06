@@ -31,6 +31,11 @@ const process = new Vue({
             thesisForm.showThesisForm(this.thesisId, this.subjectName)
         },
 
+        viewOrSelectLocation(){
+            /* 查看或选择答辩地点 */
+            locationForm.showLocationForm()
+        },
+
         getInfo(){
             /* 获取学生的课题ID、任务书ID、开题报告等... */
 

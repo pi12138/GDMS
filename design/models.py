@@ -2,6 +2,8 @@ from django.db import models
 
 # Create your models here.
 from subject.models import Subject
+from organization.models import Location
+from user.models import Student
 
 
 class GraduationDesign(models.Model):
@@ -32,3 +34,15 @@ class GraduationThesis(models.Model):
 
     def __str__(self):
         return "{}的毕业论文".format(self.subject)
+
+
+class GraduationReply(models.Model):
+    """
+    毕业答辩模型
+    """
+    location = models.OneToOneField(verbose_name="答辩地点", to=Location, on_delete=models.CASCADE)
+    student = models.OneToOneField(verbose_name='答辩学生', to=Student, on_delete=models.CASCADE)
+    select_time = models.DateTimeField(verbose_name='选择时间')
+
+    def __str__(self):
+        return self.location.location_number
