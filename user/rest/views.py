@@ -324,6 +324,30 @@ class UserInfoViewSet(ViewSet):
         }
         return Response(res)
 
+    @action(methods=['POST'], detail=False)
+    def import_score(self, request):
+        file = request.data.get('file')
+        file_data = file.read()
+        data_list = handle_excel_info(file_data)
+
+        success_list = list()
+        error_list = list()
+        for data in data_list[1:]:
+            try:
+                thesis = GraduationThesis.objects.get(subject_id=data[0])
+                thesis.score = data[1]
+                thesis.save()
+                success_list.append(data[0])
+            except Exception as e:
+                error_list.append({'subject_id': data[0], 'error': str(e)})
+
+        res = {
+            'success': success_list,
+            'error': error_list
+        }
+
+        return Response(res)
+
 
 class SelectedStudentViewSet(ViewSet):
     """

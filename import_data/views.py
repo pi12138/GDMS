@@ -105,4 +105,3 @@ class ImportLocationInfo(View):
             error_info.append(e)
 
         return render(request, 'import_location_data.html', context)
-
