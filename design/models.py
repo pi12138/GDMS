@@ -24,6 +24,7 @@ class GraduationThesis(models.Model):
     """
     毕业论文模型
     """
+
     subject = models.OneToOneField(verbose_name="课题", to=Subject, on_delete=models.CASCADE)
     words = models.CharField(verbose_name="关键词", max_length=250)
     summary = models.TextField(verbose_name="摘要", blank=True, null=True)
@@ -31,6 +32,7 @@ class GraduationThesis(models.Model):
     upload_time = models.DateTimeField(verbose_name="上传时间", blank=True, null=True)
     review_option = models.TextField(verbose_name="指导老师审核意见", blank=True, null=True)
     review_time = models.DateTimeField(verbose_name="审阅时间", blank=True, null=True)
+    score = models.IntegerField(verbose_name="论文成绩", blank=True, null=True)
 
     def __str__(self):
         return "{}的毕业论文".format(self.subject)

@@ -36,6 +36,11 @@ const process = new Vue({
             locationForm.showLocationForm()
         },
 
+        viewScore(){
+            /* 查看答辩成绩 */
+            score.showScore(this.subjectName, this.thesisId)
+        },
+
         getInfo(){
             /* 获取学生的课题ID、任务书ID、开题报告等... */
 

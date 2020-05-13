@@ -98,28 +98,28 @@
                 <img src="/static/images/箭头1.png" alt="" class="image">
             </div>
 
-            <div class="image_container">
+            <div class="image_container" @click="viewScore">
                 <img src="/static/images/score.png" alt="任务书" class="image">
                 <h5 class="">答辩成绩</h5>
             </div>
 
-            <div class="image_container">
-                <img src="/static/images/箭头1.png" alt="" class="image">
-            </div>
-
-            <div class="image_container">
-                <img src="/static/images/questionnaire-fill.png" alt="任务书" class="image">
-                <h5 class="">问卷调查</h5>
-            </div>
-
-            <div class="image_container">
-                <img src="/static/images/箭头1.png" alt="" class="image">
-            </div>
-
-            <div class="image_container">
-                <img src="/static/images/毕业生就业手续办理.png" alt="任务书" class="image">
-                <h5 class="">毕业手续</h5>
-            </div>
+{#            <div class="image_container">#}
+{#                <img src="/static/images/箭头1.png" alt="" class="image">#}
+{#            </div>#}
+{##}
+{#            <div class="image_container">#}
+{#                <img src="/static/images/questionnaire-fill.png" alt="任务书" class="image">#}
+{#                <h5 class="">问卷调查</h5>#}
+{#            </div>#}
+{##}
+{#            <div class="image_container">#}
+{#                <img src="/static/images/箭头1.png" alt="" class="image">#}
+{#            </div>#}
+{##}
+{#            <div class="image_container">#}
+{#                <img src="/static/images/毕业生就业手续办理.png" alt="任务书" class="image">#}
+{#                <h5 class="">毕业手续</h5>#}
+{#            </div>#}
         </div>
 
     </div>
@@ -473,6 +473,28 @@
         </form>
     </div>
 
+
+    <!--答辩成绩-->
+    <div class="container hidden" id="score" ref="score">
+        <form action="" class="form">
+            <div class="row">
+                <div class="form-group col-md-8">
+                    <label for="">课题</label>
+                    <input type="text" class="form-control" :value="subjectName" disabled>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="">成绩</label>
+                    <input type="text" class="form-control" :value="score" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2 col-md-push-5">
+                    <input type="button" value="关闭" class="btn btn-default form-control" @click="hiddenScore">
+                </div>
+            </div>
+        </form>
+    </div>
+
     <script src="/static/js/vue.js"></script>
     <script src="/static/js/axios.min.js"></script>
     <script src="/static/js/task_book.js"></script>
@@ -480,6 +502,7 @@
     <script src="/static/js/design_form.js"></script>
     <script src="/static/js/thesis_form.js"></script>
     <script src="/static/js/location.js"></script>
+    <script src="/static/js/score.js"></script>
     <script src="/static/js/student_process.js"></script>
 </body>
 

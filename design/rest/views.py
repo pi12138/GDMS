@@ -100,7 +100,7 @@ class GraduationDesignViewSet(ViewSet):
 class GraduationThesisViewSet(ViewSet):
     """
     通用功能: 毕业论文
-        - 学生: 上传 + 下载 + 修改
+        - 学生: 上传 + 下载 + 修改 + 查看毕业设计成绩
         - 教师: 审核 + 下载
         - 管理员: 查看
     """
@@ -185,6 +185,20 @@ class GraduationThesisViewSet(ViewSet):
             return {'msg': "毕业论文不存在"}
 
         return query_set[0]
+
+    @action(methods=['GET'], detail=False)
+    def score(self, request):
+        these = request.query_params.get('theseId')
+        query_set = GraduationThesis.objects.filter(id=these)
+        if not query_set.exists():
+            return Response({'msg': '未找到论文成绩'}, status=400)
+
+        these_obj = query_set[0]
+        score = these_obj.score
+        if score is None:
+            score = '当前未给出论文成绩'
+
+        return Response({'data': score})
 
 
 class GraduationReplyViewSet(ViewSet):
