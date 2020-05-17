@@ -270,7 +270,7 @@ class UserInfoViewSet(ViewSet):
                 Administrator.objects.create(faculty_id=faculty, account_id=user.id, name=data[2])
                 success_list.append({'index': i, 'username': user.username})
             except Exception as e:
-                error_list.append({'index': i, 'error': e})
+                error_list.append({'index': i, 'error': str(e)})
 
         res = {
             'success': success_list,
@@ -293,7 +293,7 @@ class UserInfoViewSet(ViewSet):
                 Teacher.objects.create(faculty_id=faculty, account_id=user.id, name=data[2], phone=data[3], qq=data[4])
                 success_list.append({'index': i, 'username': user.username})
             except Exception as e:
-                error_list.append({'index': i, 'error': e})
+                error_list.append({'index': i, 'error': str(e)})
 
         res = {
             'success': success_list,
@@ -316,7 +316,7 @@ class UserInfoViewSet(ViewSet):
                 Student.objects.create(faculty_id=faculty, account_id=user.id, name=data[2], phone=data[3], qq=data[4])
                 success_list.append({'index': i, 'username': user.username})
             except Exception as e:
-                error_list.append({'index': i, 'error': e})
+                error_list.append({'index': i, 'error': str(e)})
 
         res = {
             'success': success_list,

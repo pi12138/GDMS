@@ -109,11 +109,12 @@ class SelectSubjectViewSet(ViewSet):
             q1 = Q(subject_name__icontains=subject_name)
 
         if office:
-            q2 = Q(office=office)
+            q2 = Q(questioner__office_id=office)
 
         if questioner:
-            q3 = Q(questioner=questioner)
+            q3 = Q(questioner__name__icontains=questioner)
 
+        print(q1, q2, q3)
         query_set = Subject.objects.filter(q1, q2, q3, review_result=1)
         ser = SubjectSerializer(instance=query_set, many=True)
         res = PendingSubjectViewSet.pagination(ser.data, request)
